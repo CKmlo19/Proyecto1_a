@@ -303,7 +303,7 @@ public class Ventana extends javax.swing.JFrame {
             label.setOpaque(true);
             
             // crear el zombie aleatoriamente, del tipo que corresponda
-            Personaje zombie = new Personaje();
+            Personaje zombie = new Personaje() {};
             zombie.setLabel(label);
             
             // Crear el thread
@@ -341,7 +341,7 @@ public class Ventana extends javax.swing.JFrame {
             label.setOpaque(true);
             
             // crear el zombie aleatoriamente, del tipo que corresponda
-            Personaje defensa = new Personaje();
+            Personaje defensa = new Personaje() {};
             defensa.setLabel(label);
             
             // Crear el thread
@@ -364,7 +364,7 @@ public class Ventana extends javax.swing.JFrame {
     
     public void addDefensa(JLabel label, int fila, int columna){
        // funcion que añade la defensa en el tablero
-            Personaje defensa = new Personaje();
+            Personaje defensa = new Personaje() {};
             defensa.setLabel(label);
             
             // Crear el thread
@@ -405,8 +405,56 @@ public class Ventana extends javax.swing.JFrame {
             //label.setVisible(true);
     }
      
+     private double calcularDistancia(Personaje zombie, Personaje defensa) {
+    int x1 = zombie.posicion_x;
+    int y1 = zombie.posicion_y;
+    int x2 = defensa.posicion_x;
+    int y2 = defensa.posicion_y;
+
+   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+}
      
-   
+public void zombieAtacarDefensaMasCercana(Zombie zombie) {
+    
+    Defensa defensaMasCercana = null;
+    double distanciaMinima = Math.sqrt(25 * 25 + 25 * 25);
+
+
+    for (ThreadPersonaje threadDefensa : defensas) {
+        Defensa defensa = (Defensa) threadDefensa.personaje;
+        double distancia = calcularDistancia(zombie, defensa);
+
+        if (distancia < distanciaMinima) {
+            distanciaMinima = distancia;
+            defensaMasCercana = defensa;
+        }
+    }
+
+    if (defensaMasCercana != null) {
+        zombie.pelear(defensaMasCercana);
+    }
+}     
+
+public void defensaAtacarZombieMasCercano(Defensa defensa) {
+    Zombie zombieMasCercano = null;
+    double distanciaMinima  = Math.sqrt(25 * 25 + 25 * 25);
+
+    for (ThreadPersonaje threadZombie : zombies) {
+        Zombie zombie = (Zombie) threadZombie.personaje;
+        double distancia = calcularDistancia(defensa, zombie);
+
+        if (distancia < distanciaMinima) {
+            distanciaMinima = distancia;
+            zombieMasCercano = zombie;
+        }
+    }
+
+    if (zombieMasCercano != null) {
+        defensa.pelear(zombieMasCercano);
+    }
+}
+
+        
      
      // getters and setters
 

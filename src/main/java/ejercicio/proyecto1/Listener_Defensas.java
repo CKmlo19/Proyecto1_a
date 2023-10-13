@@ -28,15 +28,14 @@ public class Listener_Defensas extends MouseAdapter{
     
     @Override
     public void mouseClicked(MouseEvent e) {
+        if(refVentana.getBtnInicio().isEnabled()){
         enable = !enable;
         refVentana.setEnable(enable); // al darle click coloca en true o false el enable para indicar si se selecciono el contenedor
         refVentana.getLblSeleccion_Defensa().setVisible(enable);
-        if(enable){ // si es true indica que se selecciono, se añade al la variable temporal
+            if(enable){ // si es true indica que se selecciono, se añade al la variable temporal
             refVentana.setLabel_seleccionado(label_defensa); // coloca el label en una variable temporal
+            }
         }
-        else{
-        }
-        
     } 
 
 

@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -506,6 +507,10 @@ public void defensaAtacarZombieMasCercano(Defensa defensa) {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public JButton getBtnInicio() {
+        return btnInicio;
     }
 
     

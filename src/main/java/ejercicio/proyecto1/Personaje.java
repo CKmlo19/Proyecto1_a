@@ -25,7 +25,7 @@ public abstract class Personaje {
    private int posicion_y;
    private JLabel label;
 
-public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño, int posicion_x, int posicion_y) {
+public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño) {
     this.Nombre = Nombre;
     this.vida = vida;
     this.cantidad_golpes = cantidad_golpes;

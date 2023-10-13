@@ -25,6 +25,14 @@ public class ThreadPersonaje extends Thread{
         
         while(isRunning){
             
+            try{ // si logra hacer el casting significa que es un zombie
+                Zombie z1 = (Zombie) personaje;
+                System.out.println("Se puede hacer");
+            } 
+            catch(ClassCastException ex){
+                System.out.println("Error, no se puede hacer el casting");
+                
+            }
             try {
                 //determina x y y personaje.mover()
                 refVentana.verificarRangoDefensa(personaje);
@@ -37,6 +45,7 @@ public class ThreadPersonaje extends Thread{
             
         }
     }
+    
     public void pausar(){
         this.isRunning = false;
     }

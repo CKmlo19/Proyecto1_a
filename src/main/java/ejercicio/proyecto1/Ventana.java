@@ -185,6 +185,11 @@ public class Ventana extends javax.swing.JFrame {
             get.start();
             btnInicio.setEnabled(false);
         }
+        for (int i = 0; i < defensas.size(); i++) {
+            ThreadPersonaje get = defensas.get(i);
+            get.start();
+            btnInicio.setEnabled(false);
+        }
          btnDetener.setEnabled(true);
     }//GEN-LAST:event_btnInicioActionPerformed
 
@@ -302,6 +307,7 @@ public class Ventana extends javax.swing.JFrame {
                 y = new Random().nextInt(25);
             
             }
+            pnlPanelJuego.repaint();
      
         }
     }
@@ -309,19 +315,19 @@ public class Ventana extends javax.swing.JFrame {
         
         for (int i = 0; i < size; i++) {
             //crea el label
-            JLabel label =  new JLabel("100%");
-            label.setBackground(Color.red);
-            label.setForeground(new java.awt.Color(255, 255, 255));
-            label.setFont(new java.awt.Font("Helvetica Neue", 0, 10)); // NOI18N
-            label.setForeground(new java.awt.Color(255, 255, 255));
-            label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-            label.setOpaque(true);
+//            JLabel label =  new JLabel("100%");
+//            label.setBackground(Color.red);
+//            label.setForeground(new java.awt.Color(255, 255, 255));
+//            label.setFont(new java.awt.Font("Helvetica Neue", 0, 10)); // NOI18N
+//            label.setForeground(new java.awt.Color(255, 255, 255));
+//            label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+//            label.setOpaque(true);
             
             // crear el zombie aleatoriamente, del tipo que corresponda
-            Personaje zombie = new Personaje() {};
-            zombie.setLabel(label);
+            Zombie zombie = new Zombie(TipoZombie.CONTACTO, "Zombie1", 100, 1, 1, 1, 1, "ZOMBIE", 1, 1);
+           // zombie.setLabel(label);
             
-            setAparicion(label, zombie);
+            setAparicion(zombie);
             
             // Crear el thread
             ThreadPersonaje tp =  new ThreadPersonaje(zombie, this);
@@ -402,32 +408,35 @@ public class Ventana extends javax.swing.JFrame {
         }
     }
     
-     public void setAparicion(JLabel label, Personaje zombie){
+     public void setAparicion(Personaje zombie){
         // variables que sustituyen para spawnear en los bordes
         int x;
         int y;
+        
+        // el zombie
+        JLabel label = zombie.getLabel();
         
         int colOrRow = (new Random()).nextInt(2);//0: col  1: filas
         int dir = (new Random()).nextInt(2);//0: primera  1: ultima
             if (colOrRow == 0){ // va a colocarse en las columnas (x, 0), (x, 24)
                 x = new Random().nextInt(25);
                 if (dir == 0){
-                    zombie.setPosicion_x(x); zombie.setPosicion_y(0);
-                    addComponenteTablero(label, x, 0);
+                    zombie.setPosicion_x(x); zombie.setPosicion_y(10); // 0
+                    addComponenteTablero(label, x, 10);
                 }
                 else{
-                    zombie.setPosicion_x(x); zombie.setPosicion_y(24);
-                    addComponenteTablero(label, x, 24);
+                    zombie.setPosicion_x(x); zombie.setPosicion_y(10); // 24
+                    addComponenteTablero(label, x, 10);
                 }
             }else{ // va a colocarse en las filas (0, y), (24, y)    
                 y = new Random().nextInt(25);
                 if (dir == 0){
-                    zombie.setPosicion_x(0); zombie.setPosicion_y(y);
-                    addComponenteTablero(label, 0, y);
+                    zombie.setPosicion_x(10); zombie.setPosicion_y(y); // 0
+                    addComponenteTablero(label, 10, y);
                 }
                 else{
-                    zombie.setPosicion_x(24); zombie.setPosicion_y(y);
-                    addComponenteTablero(label, 24, y);
+                    zombie.setPosicion_x(10); zombie.setPosicion_y(y); // 24
+                    addComponenteTablero(label, 10, y);
                 }
             }
             //label.setVisible(true);

@@ -4,6 +4,7 @@
  */
 package ejercicio.proyecto1;
 
+import java.awt.Color;
 import javax.swing.JPanel;
 
 /**
@@ -18,17 +19,27 @@ import javax.swing.JLabel;
 
 public class Zombie extends Personaje {
     private TipoZombie tipoZombie;
+    JLabel label;
 
-    public Zombie(TipoZombie tipoZombie, String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño, int posicion_x, int posicion_y) {
-        super(Nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, posicion_x, posicion_y);
+    public Zombie(TipoZombie tipoZombie, String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño) {
+        super(Nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño);
         this.tipoZombie = tipoZombie;
+        label =  new JLabel("100%");
+        label.setBackground(Color.red);
+        label.setForeground(new java.awt.Color(255, 255, 255));
+        label.setFont(new java.awt.Font("Helvetica Neue", 0, 10)); // NOI18N
+        label.setForeground(new java.awt.Color(255, 255, 255));
+        label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label.setOpaque(true);
+        this.setLabel(label);
     }
+   
     
-    public JLabel getLabel() {
-        ImageIcon icon = new ImageIcon(getClass().getResource(tipoZombie.getRutaImagen()));
-        JLabel label = new JLabel(icon);
-        return label;
-    }
+//    public JLabel getLabel() {
+//        //ImageIcon icon = new ImageIcon(getClass().getResource(tipoZombie.getRutaImagen()));
+//        //JLabel label = new JLabel(icon);
+//        return label;
+//    }
     
     @Override
     public String toString() {

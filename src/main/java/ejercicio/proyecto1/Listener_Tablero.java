@@ -44,7 +44,7 @@ public class Listener_Tablero extends MouseAdapter {
             else{
             refVentana.getLblSeleccion_Defensa().setVisible(!refVentana.isEnable());
             refVentana.setEnable(!refVentana.isEnable());
-            refVentana.addDefensa(refVentana.getLabel_seleccionado(), fila, columna);
+            refVentana.addDefensa(refVentana.getDefensa_seleccionada(), fila, columna);
             refVentana.getPnlPanelJuego().repaint();
             refVentana.getPnlDefensas().repaint();
             

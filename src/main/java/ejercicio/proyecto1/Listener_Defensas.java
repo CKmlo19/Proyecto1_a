@@ -16,15 +16,15 @@ import javax.swing.JPanel;
 public class Listener_Defensas extends MouseAdapter{
     private Ventana refVentana;
     private JLabel label_defensa;
+    private Defensa defensa;
     boolean enable;
 
-    public Listener_Defensas(Ventana refVentana, JLabel label_defensas) {
+    public Listener_Defensas(Ventana refVentana, Defensa defensa) {
         this.refVentana = refVentana;
-        this.label_defensa = label_defensas;
+        //this.label_defensa = label_defensas;
+        this.defensa = defensa;
         enable = refVentana.isEnable();
     }
-
-   
     
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -34,6 +34,7 @@ public class Listener_Defensas extends MouseAdapter{
         refVentana.getLblSeleccion_Defensa().setVisible(enable);
             if(enable){ // si es true indica que se selecciono, se añade al la variable temporal
             refVentana.setLabel_seleccionado(label_defensa); // coloca el label en una variable temporal
+            refVentana.setDefensa_seleccionada(defensa);
             }
         }
     } 

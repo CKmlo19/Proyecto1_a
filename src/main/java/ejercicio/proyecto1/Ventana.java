@@ -24,6 +24,7 @@ public class Ventana extends javax.swing.JFrame {
    private ArrayList<ThreadPersonaje> defensas;
    private ArrayList<JLabel> labels_defensas;
    private JLabel label_seleccionado;
+   private Defensa defensa_seleccionada;
    private boolean enable = false;
    private JPanel[][] tablero; // el tablero es una matriz
     
@@ -185,11 +186,11 @@ public class Ventana extends javax.swing.JFrame {
             get.start();
             btnInicio.setEnabled(false);
         }
-        for (int i = 0; i < defensas.size(); i++) {
-            ThreadPersonaje get = defensas.get(i);
-            get.start();
-            btnInicio.setEnabled(false);
-        }
+//        for (int i = 0; i < defensas.size(); i++) {
+//            ThreadPersonaje get = defensas.get(i);
+//            get.start();
+//            btnInicio.setEnabled(false);
+//        }
          btnDetener.setEnabled(true);
     }//GEN-LAST:event_btnInicioActionPerformed
 
@@ -271,6 +272,7 @@ public class Ventana extends javax.swing.JFrame {
                 tablero[fila][columna].setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 tablero[fila][columna].setLayout(new java.awt.BorderLayout(1,1));
                 pnlPanelJuego.add(tablero[fila][columna]);
+                
             }
         }
     }
@@ -282,9 +284,10 @@ public class Ventana extends javax.swing.JFrame {
     }
     
     // Esta funcion agrega un componente al tablero en la posicion x,y dado
-    public void addComponenteTablero(JLabel label, int fila, int columna){
+    public void addComponenteTablero(Personaje personaje, int fila, int columna){
           JPanel casilla_tablero = getJPanelTablero(fila, columna);
-          casilla_tablero.add(label);
+          personaje.setPosicion_x(fila); personaje.setPosicion_y(columna);
+          casilla_tablero.add(personaje.getLabel());
     }
    
     
@@ -293,23 +296,22 @@ public class Ventana extends javax.swing.JFrame {
         int y = new Random().nextInt(25);
         boolean isRunning = true;
         
-        while(isRunning){
-            if(verificarCasilla(x, y)){
+        //while(isRunning){
+            //if(verificarCasilla(x, y)){
                // JPanel panel_label = tablero[x][y]; // obtiene el panel donde se ubica el JLabel
-                addComponenteTablero(personaje.getLabel(), x, y);
+                addComponenteTablero(personaje, x, y);
                 pnlPanelJuego.repaint();
                 isRunning = false;
                  //panel_label.removeAll(); // elimina todo lo que esta dentro de este panel
   
-            }
-            else{
+           // }
+            //else{
                 x = new Random().nextInt(25);
                 y = new Random().nextInt(25);
-            
-            }
-            pnlPanelJuego.repaint();
+           // }
+            //pnlPanelJuego.repaint();
      
-        }
+      //  }
     }
     private void generarZombies(int size){
         
@@ -376,35 +378,28 @@ public class Ventana extends javax.swing.JFrame {
             
             // verifica si la casilla en las posiciones x,y estan vacias para agregarlo
            
-            addComponenteTablero(label, x, y);
+            addComponenteTablero(defensa, x, y);
              
         }
     }
     
-    public void addDefensa(JLabel label, int fila, int columna){
+    public void addDefensa(Defensa defensa, int fila, int columna){
        // funcion que añade la defensa en el tablero
-            Personaje defensa = new Personaje() {};
-            defensa.setLabel(label);
             defensa.setPosicion_x(fila);
             defensa.setPosicion_y(columna);
             
             // Crear el thread
             ThreadPersonaje tp =  new ThreadPersonaje(defensa, this);
             defensas.add(tp);  
-            addComponenteTablero(label, fila, columna);
+            addComponenteTablero(defensa, fila, columna);
             pnlPanelJuego.repaint();
     }
     
     public void generarDefensasContenedor(int size){
         for (int i = 0; i < size; i++) {
-            JLabel label1 = new JLabel("100");
-            label1.setBackground(Color.ORANGE);
-            label1.setForeground(Color.white);
-            label1.setOpaque(true);
-            label1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-            label1.addMouseListener(new Listener_Defensas(this, label1));
-            label1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            pnlDefensas.add(label1);
+            Defensa defensa = new Defensa(TipoDefensa.BLOQUES, "THE WALL", 100, 0, 1, 1, 1, "DEFENSA", 0, 0);
+            defensa.getLabel().addMouseListener(new Listener_Defensas(this, defensa));
+            pnlDefensas.add(defensa.getLabel());
         }
     }
     
@@ -421,22 +416,22 @@ public class Ventana extends javax.swing.JFrame {
             if (colOrRow == 0){ // va a colocarse en las columnas (x, 0), (x, 24)
                 x = new Random().nextInt(25);
                 if (dir == 0){
-                    zombie.setPosicion_x(x); zombie.setPosicion_y(10); // 0
-                    addComponenteTablero(label, x, 10);
+                   // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 0
+                    addComponenteTablero(zombie, 3, 3);
                 }
                 else{
-                    zombie.setPosicion_x(x); zombie.setPosicion_y(10); // 24
-                    addComponenteTablero(label, x, 10);
+                   // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 24
+                    addComponenteTablero(zombie, 3, 3);
                 }
             }else{ // va a colocarse en las filas (0, y), (24, y)    
                 y = new Random().nextInt(25);
                 if (dir == 0){
-                    zombie.setPosicion_x(10); zombie.setPosicion_y(y); // 0
-                    addComponenteTablero(label, 10, y);
+                   // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 0
+                    addComponenteTablero(zombie, 3, 3);
                 }
                 else{
-                    zombie.setPosicion_x(10); zombie.setPosicion_y(y); // 24
-                    addComponenteTablero(label, 10, y);
+                  //  zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 24
+                    addComponenteTablero(zombie, 3, 3);
                 }
             }
             //label.setVisible(true);
@@ -493,7 +488,9 @@ public void defensaAtacarZombieMasCercano(Defensa defensa) {
 // verifica si hay algun zombie en el rango de dicha defensa
 public void verificarRangoDefensa(Personaje personaje){
         int fila = personaje.getPosicion_x();
-        int columna = personaje.getPosicion_x();  // Supongamos que estamos verificando la ubicación en la fila 2, columna 2
+        int columna = personaje.getPosicion_y();  
+        System.out.println("Elemento en: ("+ fila + ", " + columna + ")");
+        
         int rango = 1;  // Especifica el rango alrededor de la ubicación actual
 
         for (int i = -rango; i <= rango; i++) {
@@ -510,6 +507,7 @@ public void verificarRangoDefensa(Personaje personaje){
         
 }
 
+// Funcion que determina si la ubicacion es valida para el personaje de la matriz
 public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna) {
         return fila >= 0 && fila < matriz.length && columna >= 0 && columna < matriz[0].length;
     }
@@ -579,6 +577,14 @@ public void defensaAtacarZombie(Defensa defensa){
 
     public JButton getBtnInicio() {
         return btnInicio;
+    }
+
+    public Defensa getDefensa_seleccionada() {
+        return defensa_seleccionada;
+    }
+
+    public void setDefensa_seleccionada(Defensa defensa_seleccionada) {
+        this.defensa_seleccionada = defensa_seleccionada;
     }
 
     

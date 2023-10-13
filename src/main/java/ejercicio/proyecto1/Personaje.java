@@ -11,19 +11,19 @@ import javax.swing.JLabel;
  * @author luisc
  */
 public abstract class Personaje {
-    String Nombre;
-    int vida;
-    int golpes;
-    int cantidad_golpes;
-    int nivel;
-    int campos;
-    int nivel_aparicion;
-    String tipo;
-    int rango;
-    int daño;
-    int posicion_x;
-    int posicion_y;
-    JLabel label;
+   private String Nombre;
+   private int vida;
+   private int golpes;
+   private int cantidad_golpes;
+   private int nivel;
+   private int campos;
+   private int nivel_aparicion;
+   private String tipo;
+   private int rango;
+   private int daño;
+   private int posicion_x;
+   private int posicion_y;
+   private JLabel label;
 
 public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño, int posicion_x, int posicion_y) {
     this.Nombre = Nombre;
@@ -38,12 +38,29 @@ public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int ca
     this.posicion_x = posicion_x;
     this.posicion_y = posicion_y;
 }
-
     public Personaje() {
        
     }
-
-
+  
+    
+    
+    public void morir(){
+        this.vida = 0;
+        System.out.println("Te has muerto");
+    }
+    
+    public void pelear(Personaje oponente) {
+        int dañoTotal = this.cantidad_golpes * this.daño;
+        oponente.vida -= dañoTotal;  
+        if (oponente.vida <= 0) {
+            oponente.morir();
+        }
+    }
+    
+    
+    
+    // getters and setters
+    
     @Override
     public String toString() {
         return "Personaje{" + "Nombre=" + Nombre + ", vida=" + vida + ", cantidad_golpes=" + cantidad_golpes + ", nivel=" + nivel + ", campos=" + campos + ", nivel_aparicion=" + nivel_aparicion + ", tipo=" + tipo + ", rango=" + rango + '}';
@@ -128,18 +145,31 @@ public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int ca
     public void setLabel(JLabel label) {
         this.label = label;
     }
-    
-    public void morir(){
-        this.vida = 0;
-        System.out.println("Te has muerto jaja get good personaje diff");
-    }
-    
-    public void pelear(Personaje oponente) {
-        int dañoTotal = this.cantidad_golpes * this.daño;
-        oponente.vida -= dañoTotal;  
-        if (oponente.vida <= 0) {
-            oponente.morir();
-        }
+
+    public int getGolpes() {
+        return golpes;
     }
 
+    public void setGolpes(int golpes) {
+        this.golpes = golpes;
+    }
+
+    public int getPosicion_x() {
+        return posicion_x;
+    }
+
+    public void setPosicion_x(int posicion_x) {
+        this.posicion_x = posicion_x;
+    }
+
+    public int getPosicion_y() {
+        return posicion_y;
+    }
+
+    public void setPosicion_y(int posicion_y) {
+        this.posicion_y = posicion_y;
+    }
+    
+    
+    
 }

@@ -367,6 +367,8 @@ public class Ventana extends javax.swing.JFrame {
        // funcion que añade la defensa en el tablero
             Personaje defensa = new Personaje() {};
             defensa.setLabel(label);
+            defensa.setPosicion_x(fila);
+            defensa.setPosicion_y(columna);
             
             // Crear el thread
             ThreadPersonaje tp =  new ThreadPersonaje(defensa, this);
@@ -384,7 +386,6 @@ public class Ventana extends javax.swing.JFrame {
             label1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
             label1.addMouseListener(new Listener_Defensas(this, label1));
             label1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            labels_defensas.add(label1);
             pnlDefensas.add(label1);
         }
     }
@@ -406,11 +407,11 @@ public class Ventana extends javax.swing.JFrame {
             //label.setVisible(true);
     }
      
-     private double calcularDistancia(Personaje zombie, Personaje defensa) {
-    int x1 = zombie.posicion_x;
-    int y1 = zombie.posicion_y;
-    int x2 = defensa.posicion_x;
-    int y2 = defensa.posicion_y;
+private double calcularDistancia(Personaje zombie, Personaje defensa) {
+    int x1 = zombie.getPosicion_x();
+    int y1 = zombie.getPosicion_y();
+    int x2 = defensa.getPosicion_x();
+    int y2 = defensa.getPosicion_y();
 
    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
@@ -454,8 +455,7 @@ public void defensaAtacarZombieMasCercano(Defensa defensa) {
         defensa.pelear(zombieMasCercano);
     }
 }
-
-        
+  
      
      // getters and setters
 

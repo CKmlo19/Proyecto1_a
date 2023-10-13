@@ -41,7 +41,7 @@ public class Ventana extends javax.swing.JFrame {
         crearTablero(); // funcion que crea el tablero
        // Component c1 = getJPanelTablero(24, 24);
        // addComponenteTablero(c1);
-        generarZombies(10);
+        generarZombies(1);
         //generarDefensas(10);
         generarDefensasContenedor(7);
     }
@@ -283,13 +283,27 @@ public class Ventana extends javax.swing.JFrame {
     }
    
     
-    public void moverPersonaje(JLabel label){
+    public void moverPersonaje(Personaje personaje){
         int x = new Random().nextInt(25);
         int y = new Random().nextInt(25);
-        JPanel panel_label = tablero[x][y]; // obtiene el panel donde se ubica el JLabel
-        panel_label.removeAll(); // elimina todo lo que esta dentro de este panel
-        addComponenteTablero(label, x, y);
-        pnlPanelJuego.repaint();
+        boolean isRunning = true;
+        
+        while(isRunning){
+            if(verificarCasilla(x, y)){
+               // JPanel panel_label = tablero[x][y]; // obtiene el panel donde se ubica el JLabel
+                addComponenteTablero(personaje.getLabel(), x, y);
+                pnlPanelJuego.repaint();
+                isRunning = false;
+                 //panel_label.removeAll(); // elimina todo lo que esta dentro de este panel
+  
+            }
+            else{
+                x = new Random().nextInt(25);
+                y = new Random().nextInt(25);
+            
+            }
+     
+        }
     }
     private void generarZombies(int size){
         
@@ -307,12 +321,13 @@ public class Ventana extends javax.swing.JFrame {
             Personaje zombie = new Personaje() {};
             zombie.setLabel(label);
             
+            setAparicion(label, zombie);
+            
             // Crear el thread
             ThreadPersonaje tp =  new ThreadPersonaje(zombie, this);
             zombies.add(tp);
             
             // agrega el zombie solo en la ultima casilla exterior (0,0) hasta (0, 24) y (24,0) hasta la (24,24)
-            setAparicion(label);
              
         }
         
@@ -321,10 +336,10 @@ public class Ventana extends javax.swing.JFrame {
     private boolean verificarCasilla(int x, int y){
     // funcion que verifica la casilla si contiene un elemento
             if (tablero[x][y].getComponentCount() == 0){
-                return false;
+                return true;
             }
             else{
-                return true;
+                return false;
             }
         }
 
@@ -355,9 +370,6 @@ public class Ventana extends javax.swing.JFrame {
             
             // verifica si la casilla en las posiciones x,y estan vacias para agregarlo
            
-            while(verificarCasilla(x, y)){
-                verificarCasilla(x, y);
-            }
             addComponenteTablero(label, x, y);
              
         }
@@ -390,19 +402,33 @@ public class Ventana extends javax.swing.JFrame {
         }
     }
     
-     public void setAparicion(JLabel label){
+     public void setAparicion(JLabel label, Personaje zombie){
+        // variables que sustituyen para spawnear en los bordes
+        int x;
+        int y;
+        
         int colOrRow = (new Random()).nextInt(2);//0: col  1: filas
         int dir = (new Random()).nextInt(2);//0: primera  1: ultima
             if (colOrRow == 0){ // va a colocarse en las columnas (x, 0), (x, 24)
-                if (dir == 0)
-                    addComponenteTablero(label, new Random().nextInt(25), 0);
-                else
-                    addComponenteTablero(label, new Random().nextInt(25), 24);
-            }else{ // va a colocarse en las filas (0, y), (24, y)
-                if (dir == 0)
-                    addComponenteTablero(label, 0, new Random().nextInt(25));
-                else
-                    addComponenteTablero(label, 24, new Random().nextInt(25));
+                x = new Random().nextInt(25);
+                if (dir == 0){
+                    zombie.setPosicion_x(x); zombie.setPosicion_y(0);
+                    addComponenteTablero(label, x, 0);
+                }
+                else{
+                    zombie.setPosicion_x(x); zombie.setPosicion_y(24);
+                    addComponenteTablero(label, x, 24);
+                }
+            }else{ // va a colocarse en las filas (0, y), (24, y)    
+                y = new Random().nextInt(25);
+                if (dir == 0){
+                    zombie.setPosicion_x(0); zombie.setPosicion_y(y);
+                    addComponenteTablero(label, 0, y);
+                }
+                else{
+                    zombie.setPosicion_x(24); zombie.setPosicion_y(y);
+                    addComponenteTablero(label, 24, y);
+                }
             }
             //label.setVisible(true);
     }
@@ -455,6 +481,39 @@ public void defensaAtacarZombieMasCercano(Defensa defensa) {
         defensa.pelear(zombieMasCercano);
     }
 }
+// verifica si hay algun zombie en el rango de dicha defensa
+public void verificarRangoDefensa(Personaje personaje){
+        int fila = personaje.getPosicion_x();
+        int columna = personaje.getPosicion_x();  // Supongamos que estamos verificando la ubicación en la fila 2, columna 2
+        int rango = 1;  // Especifica el rango alrededor de la ubicación actual
+
+        for (int i = -rango; i <= rango; i++) {
+            for (int j = -rango; j <= rango; j++) {
+                int filaAdyacente = fila + i;
+                int columnaAdyacente = columna + j;
+
+                if (esUbicacionValida(tablero, filaAdyacente, columnaAdyacente) && (filaAdyacente != fila || columnaAdyacente != columna)) {
+                    JPanel elementoAdyacente = tablero[filaAdyacente][columnaAdyacente];
+                    System.out.println("Elemento en [" + filaAdyacente + "][" + columnaAdyacente + "]: " + elementoAdyacente);
+                }
+            }
+        }
+        
+}
+
+public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna) {
+        return fila >= 0 && fila < matriz.length && columna >= 0 && columna < matriz[0].length;
+    }
+
+
+// funcion que ataca al zombie mas cercano
+public void defensaAtacarZombie(Defensa defensa){
+       
+
+
+}
+
+
   
      
      // getters and setters

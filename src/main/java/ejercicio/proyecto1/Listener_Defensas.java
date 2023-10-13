@@ -28,7 +28,7 @@ public class Listener_Defensas extends MouseAdapter{
     
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(refVentana.getBtnInicio().isEnabled()){
+        if(refVentana.getBtnInicio().isEnabled()){ // si el boton para iniciar el juego no se ha presionado se puede añadir las defensas
         enable = !enable;
         refVentana.setEnable(enable); // al darle click coloca en true o false el enable para indicar si se selecciono el contenedor
         refVentana.getLblSeleccion_Defensa().setVisible(enable);

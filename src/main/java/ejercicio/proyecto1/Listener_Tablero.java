@@ -34,10 +34,11 @@ public class Listener_Tablero extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         if(refVentana.isEnable()){ // si el enable es true
-            if(tablero[fila][columna].getComponentCount() != 0){
+            if(tablero[fila][columna].getComponentCount() != 0){ // si la casiila no esta vacia
                 JOptionPane.showMessageDialog(null, "La casilla se encuentra ocupada", "Mensaje de Error", JOptionPane.INFORMATION_MESSAGE);
             }
-            else if((fila == 0) || (columna == 0) || (fila == 24) || (columna == 24)){
+            // Para que no pueda colocar las defensas en el cuadrado exterior
+            else if((fila == 0) || (columna == 0) || (fila == 24) || (columna == 24)){ // 
             JOptionPane.showMessageDialog(null, "No puedes colocar en dicha casilla", "Mensaje de Error", JOptionPane.INFORMATION_MESSAGE); 
             }
             else{

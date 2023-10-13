@@ -27,8 +27,10 @@ public class ThreadPersonaje extends Thread{
             
             try {
                 //determina x y y personaje.mover()
-                refVentana.moverPersonaje(personaje.getLabel());
-                sleep(1000);
+                refVentana.verificarRangoDefensa(personaje);
+                refVentana.moverPersonaje(personaje);
+                sleep(5000);
+   
             } catch (InterruptedException ex) {
                 System.out.println("Se ha interrumpido el programa");
             }

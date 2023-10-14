@@ -5,15 +5,12 @@
 package ejercicio.proyecto1;
 
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -22,8 +19,6 @@ import javax.swing.border.EmptyBorder;
 public class Ventana extends javax.swing.JFrame {
    private ArrayList<ThreadPersonaje> zombies;
    private ArrayList<ThreadPersonaje> defensas;
-   private ArrayList<JLabel> labels_defensas;
-   private JLabel label_seleccionado;
    private Defensa defensa_seleccionada;
    private boolean enable = false;
    private JPanel[][] tablero; // el tablero es una matriz
@@ -34,7 +29,6 @@ public class Ventana extends javax.swing.JFrame {
     public Ventana() {
         zombies = new ArrayList<ThreadPersonaje>();
         defensas = new ArrayList<ThreadPersonaje>();
-        labels_defensas = new ArrayList<JLabel>();
         tablero = new JPanel[25][25];
         initComponents();
         lblSeleccion_Defensa.setVisible(enable);
@@ -61,8 +55,9 @@ public class Ventana extends javax.swing.JFrame {
         btnDetener = new javax.swing.JButton();
         pnlDefensas = new javax.swing.JPanel();
         lblSeleccion_Defensa = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        lblBorrarDefensa = new javax.swing.JLabel();
         tbnBorrarDefensa = new javax.swing.JToggleButton();
+        lblEspaciosEjercito = new javax.swing.JLabel();
 
         jPanel5.setBackground(new java.awt.Color(255, 51, 51));
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -113,11 +108,16 @@ public class Ventana extends javax.swing.JFrame {
         lblSeleccion_Defensa.setEnabled(false);
         lblSeleccion_Defensa.setOpaque(true);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 51, 0));
-        jLabel1.setText("Selecciona una defensa para borrar");
+        lblBorrarDefensa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblBorrarDefensa.setForeground(new java.awt.Color(255, 51, 0));
+        lblBorrarDefensa.setText("Selecciona una defensa para borrar");
+        lblBorrarDefensa.setEnabled(false);
 
         tbnBorrarDefensa.setText("BorrarDefensa");
+
+        lblEspaciosEjercito.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblEspaciosEjercito.setForeground(new java.awt.Color(0, 0, 0));
+        lblEspaciosEjercito.setText("Espacios ejercito: ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -125,16 +125,15 @@ public class Ventana extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(69, 69, 69))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(270, Short.MAX_VALUE)
+                        .addComponent(lblBorrarDefensa, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(103, 103, 103)
                         .addComponent(btnInicio)
                         .addGap(112, 112, 112)
-                        .addComponent(tbnBorrarDefensa)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(tbnBorrarDefensa)))
+                .addGap(69, 69, 69)
                 .addComponent(pnlDefensas, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -146,8 +145,10 @@ public class Ventana extends javax.swing.JFrame {
                 .addGap(83, 83, 83))
             .addGroup(layout.createSequentialGroup()
                 .addGap(78, 78, 78)
-                .addComponent(pnlPanelJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 881, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblEspaciosEjercito)
+                    .addComponent(pnlPanelJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 881, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +160,7 @@ public class Ventana extends javax.swing.JFrame {
                             .addComponent(btnInicio)
                             .addComponent(tbnBorrarDefensa))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblBorrarDefensa, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(24, 24, 24))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -173,7 +174,9 @@ public class Ventana extends javax.swing.JFrame {
                                 .addComponent(btnDetener)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(pnlPanelJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(lblEspaciosEjercito)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -306,8 +309,8 @@ public class Ventana extends javax.swing.JFrame {
   
            // }
             //else{
-                x = new Random().nextInt(25);
-                y = new Random().nextInt(25);
+               // x = new Random().nextInt(25);
+               // y = new Random().nextInt(25);
            // }
             //pnlPanelJuego.repaint();
      
@@ -417,21 +420,21 @@ public class Ventana extends javax.swing.JFrame {
                 x = new Random().nextInt(25);
                 if (dir == 0){
                    // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 0
-                    addComponenteTablero(zombie, 3, 3);
+                    addComponenteTablero(zombie, x, 0);
                 }
                 else{
                    // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 24
-                    addComponenteTablero(zombie, 3, 3);
+                    addComponenteTablero(zombie, x, 24);
                 }
             }else{ // va a colocarse en las filas (0, y), (24, y)    
                 y = new Random().nextInt(25);
                 if (dir == 0){
                    // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 0
-                    addComponenteTablero(zombie, 3, 3);
+                    addComponenteTablero(zombie, 0, y);
                 }
                 else{
                   //  zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 24
-                    addComponenteTablero(zombie, 3, 3);
+                    addComponenteTablero(zombie, 24, y);
                 }
             }
             //label.setVisible(true);
@@ -486,12 +489,13 @@ public void defensaAtacarZombieMasCercano(Defensa defensa) {
     }
 }
 // verifica si hay algun zombie en el rango de dicha defensa
-public void verificarRangoDefensa(Personaje personaje){
+public void verificarRangoAdyacentes(Personaje personaje){
         int fila = personaje.getPosicion_x();
         int columna = personaje.getPosicion_y();  
         System.out.println("Elemento en: ("+ fila + ", " + columna + ")");
         
-        int rango = 1;  // Especifica el rango alrededor de la ubicación actual
+        
+        int rango = personaje.getRango();  // Especifica el rango alrededor de la ubicación actual
 
         for (int i = -rango; i <= rango; i++) {
             for (int j = -rango; j <= rango; j++) {
@@ -499,6 +503,9 @@ public void verificarRangoDefensa(Personaje personaje){
                 int columnaAdyacente = columna + j;
 
                 if (esUbicacionValida(tablero, filaAdyacente, columnaAdyacente) && (filaAdyacente != fila || columnaAdyacente != columna)) {
+                    if(verificarCasilla(filaAdyacente, columnaAdyacente) == false){ // si no esta vacia es que contiene algo
+                        atacarPersonaje(personaje, filaAdyacente, columnaAdyacente); // ataca al enemigo
+                    }
                     JPanel elementoAdyacente = tablero[filaAdyacente][columnaAdyacente];
                     System.out.println("Elemento en [" + filaAdyacente + "][" + columnaAdyacente + "]: " + elementoAdyacente);
                 }
@@ -513,9 +520,16 @@ public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna
     }
 
 
-// funcion que ataca al zombie mas cercano
-public void defensaAtacarZombie(Defensa defensa){
-       
+// funcion que primero verifica cual personaje es para atacarlo
+public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_enemigo){
+    if(personaje.getTipo().equals("ZOMBIE")){
+        System.out.println("Estoy atacando a un zombie pts");
+    
+    
+    
+    }else{
+    
+    }
 
 
 }
@@ -554,19 +568,6 @@ public void defensaAtacarZombie(Defensa defensa){
         return lblSeleccion_Defensa;
     }
 
-    public ArrayList<JLabel> getLabels_defensas() {
-        return labels_defensas;
-    }
-
-
-    public void setLabel_seleccionado(JLabel label_seleccionado) {
-        this.label_seleccionado = label_seleccionado;
-    }
-
-    public JLabel getLabel_seleccionado() {
-        return label_seleccionado;
-    }
-
     public boolean isEnable() {
         return enable;
     }
@@ -594,8 +595,9 @@ public void defensaAtacarZombie(Defensa defensa){
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDetener;
     private javax.swing.JButton btnInicio;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JLabel lblBorrarDefensa;
+    private javax.swing.JLabel lblEspaciosEjercito;
     private javax.swing.JLabel lblSeleccion_Defensa;
     private javax.swing.JPanel pnlDefensas;
     private javax.swing.JPanel pnlPanelJuego;

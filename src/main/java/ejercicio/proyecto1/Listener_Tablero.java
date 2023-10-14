@@ -42,11 +42,11 @@ public class Listener_Tablero extends MouseAdapter {
             JOptionPane.showMessageDialog(null, "No puedes colocar en dicha casilla", "Mensaje de Error", JOptionPane.INFORMATION_MESSAGE); 
             }
             else{
-            refVentana.getLblSeleccion_Defensa().setVisible(!refVentana.isEnable());
-            refVentana.setEnable(!refVentana.isEnable());
-            refVentana.addDefensa(refVentana.getDefensa_seleccionada(), fila, columna);
-            refVentana.getPnlPanelJuego().repaint();
-            refVentana.getPnlDefensas().repaint();
+                refVentana.getLblSeleccion_Defensa().setVisible(!refVentana.isEnable());
+                refVentana.setEnable(!refVentana.isEnable());
+                refVentana.addDefensa(refVentana.getDefensa_seleccionada(), fila, columna);
+                refVentana.getPnlPanelJuego().repaint();
+                refVentana.getPnlDefensas().repaint();
             
             }
         }

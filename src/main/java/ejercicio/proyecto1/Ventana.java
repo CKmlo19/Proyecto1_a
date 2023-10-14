@@ -20,7 +20,11 @@ public class Ventana extends javax.swing.JFrame {
    private ArrayList<ThreadPersonaje> zombies;
    private ArrayList<ThreadPersonaje> defensas;
    private Defensa defensa_seleccionada;
+   private int ejercito;
    private boolean enable = false;
+   private boolean enable_borrar = false;
+   int cantidad_defensas;
+   int cantidad_zombies;
    private JPanel[][] tablero; // el tablero es una matriz
     
     /**
@@ -111,9 +115,13 @@ public class Ventana extends javax.swing.JFrame {
         lblBorrarDefensa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblBorrarDefensa.setForeground(new java.awt.Color(255, 51, 0));
         lblBorrarDefensa.setText("Selecciona una defensa para borrar");
-        lblBorrarDefensa.setEnabled(false);
 
         tbnBorrarDefensa.setText("BorrarDefensa");
+        tbnBorrarDefensa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbnBorrarDefensaMouseClicked(evt);
+            }
+        });
 
         lblEspaciosEjercito.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblEspaciosEjercito.setForeground(new java.awt.Color(0, 0, 0));
@@ -229,6 +237,12 @@ public class Ventana extends javax.swing.JFrame {
 //        }
 //       btnDetener.setText("Reanudar");
     }//GEN-LAST:event_btnDetenerActionPerformed
+
+    private void tbnBorrarDefensaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbnBorrarDefensaMouseClicked
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_tbnBorrarDefensaMouseClicked
  
     /**
      * @param args the command line arguments
@@ -388,14 +402,16 @@ public class Ventana extends javax.swing.JFrame {
     
     public void addDefensa(Defensa defensa, int fila, int columna){
        // funcion que añade la defensa en el tablero
-            defensa.setPosicion_x(fila);
-            defensa.setPosicion_y(columna);
-            
-            // Crear el thread
-            ThreadPersonaje tp =  new ThreadPersonaje(defensa, this);
-            defensas.add(tp);  
-            addComponenteTablero(defensa, fila, columna);
-            pnlPanelJuego.repaint();
+        Defensa def2 = new 
+        Defensa(TipoDefensa.BLOQUES, defensa.getNombre(), defensa.getVida(), defensa.getCantidad_golpes(), defensa.getNivel(), defensa.getCampos(), defensa.getNivel_aparicion(), defensa.getTipo(), defensa.getRango(), defensa.getDaño());
+        def2.setPosicion_x(fila);
+        def2.setPosicion_y(columna);
+        
+        // Crear el thread
+        ThreadPersonaje tp =  new ThreadPersonaje(def2, this);
+        defensas.add(tp);  
+        addComponenteTablero(def2, fila, columna);
+        pnlPanelJuego.repaint();
     }
     
     public void generarDefensasContenedor(int size){

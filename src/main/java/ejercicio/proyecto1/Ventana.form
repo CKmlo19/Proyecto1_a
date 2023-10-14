@@ -192,13 +192,15 @@
           <Color blue="0" green="33" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Selecciona una defensa para borrar"/>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="tbnBorrarDefensa">
       <Properties>
         <Property name="text" type="java.lang.String" value="BorrarDefensa"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbnBorrarDefensaMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblEspaciosEjercito">
       <Properties>

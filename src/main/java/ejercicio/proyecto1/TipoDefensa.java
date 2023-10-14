@@ -31,6 +31,32 @@ public enum TipoDefensa {
     public String getRutaImagen() {
         return rutaImagen;
     }
+
+    public static TipoDefensa getAEREO() {
+        return AEREO;
+    }
+
+    public static TipoDefensa getCONTACTO() {
+        return CONTACTO;
+    }
+
+    public static TipoDefensa getMEDIANO_ALCANCE() {
+        return MEDIANO_ALCANCE;
+    }
+
+    public static TipoDefensa getIMPACTO() {
+        return IMPACTO;
+    }
+
+    public static TipoDefensa getATAQUE_MULTIPLE() {
+        return ATAQUE_MULTIPLE;
+    }
+
+    public static TipoDefensa getBLOQUES() {
+        return BLOQUES;
+    }
+    
+    
 }
 
 

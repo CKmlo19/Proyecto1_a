@@ -278,7 +278,7 @@ public class Ventana extends javax.swing.JFrame {
 
                 int resultado = fileChooser.showOpenDialog(this);
                 if (resultado == JFileChooser.APPROVE_OPTION) {
-                    Zombie z1 = (Zombie)zombies.get(0).personaje;
+                    Zombie z1 = (Zombie)zombies.get(0).getPersonaje();
                     File archivoSeleccionado = fileChooser.getSelectedFile();
                     ImageIcon imagen = new ImageIcon(archivoSeleccionado.getAbsolutePath());
                     Image imagenRedimensionada = imagen.getImage().getScaledInstance(z1.getLabel().getWidth(), z1.getLabel().getHeight(), Image.SCALE_SMOOTH);
@@ -351,9 +351,9 @@ public class Ventana extends javax.swing.JFrame {
     }
    
     
-    public void moverPersonaje(Personaje personaje){
-        int x = new Random().nextInt(25);
-        int y = new Random().nextInt(25);
+    public void moverPersonaje(Personaje personaje, int x, int y){
+       // x = new Random().nextInt(25);
+        //y = new Random().nextInt(25);
         boolean isRunning = true;
         
         //while(isRunning){
@@ -476,7 +476,7 @@ public void zombieAtacarDefensaMasCercana(Zombie zombie) {
 
 
     for (ThreadPersonaje threadDefensa : defensas) {
-        Defensa defensa = (Defensa) threadDefensa.personaje;
+        Defensa defensa = (Defensa) threadDefensa.getPersonaje();
         double distancia = calcularDistancia(zombie, defensa);
 
         if (distancia < distanciaMinima) {
@@ -495,7 +495,7 @@ public void defensaAtacarZombieMasCercano(Defensa defensa) {
     double distanciaMinima  = Math.sqrt(25 * 25 + 25 * 25);
 
     for (ThreadPersonaje threadZombie : zombies) {
-        Zombie zombie = (Zombie) threadZombie.personaje;
+        Zombie zombie = (Zombie) threadZombie.getPersonaje();
         double distancia = calcularDistancia(defensa, zombie);
 
         if (distancia < distanciaMinima) {
@@ -511,25 +511,37 @@ public void defensaAtacarZombieMasCercano(Defensa defensa) {
 // verifica si hay algun zombie en el rango de dicha defensa
 public void verificarRangoAdyacentes(Personaje personaje){
         int fila = personaje.getPosicion_x();
-        int columna = personaje.getPosicion_y();  
+        int columna = personaje.getPosicion_y();
+        boolean hasAttacked = false;
         System.out.println("Elemento en: ("+ fila + ", " + columna + ")");
         
         
         int rango = personaje.getRango();  // Especifica el rango alrededor de la ubicación actual
-
+        
+        externo:
         for (int i = -rango; i <= rango; i++) {
             for (int j = -rango; j <= rango; j++) {
+           
                 int filaAdyacente = fila + i;
                 int columnaAdyacente = columna + j;
 
                 if (esUbicacionValida(tablero, filaAdyacente, columnaAdyacente) && (filaAdyacente != fila || columnaAdyacente != columna)) {
                     if(verificarCasilla(filaAdyacente, columnaAdyacente) == false){ // si no esta vacia es que contiene algo
                         atacarPersonaje(personaje, filaAdyacente, columnaAdyacente); // ataca al enemigo
+                        hasAttacked = true;
+                        break externo;
+                        
                     }
                     JPanel elementoAdyacente = tablero[filaAdyacente][columnaAdyacente];
                     System.out.println("Elemento en [" + filaAdyacente + "][" + columnaAdyacente + "]: " + elementoAdyacente);
+                    
                 }
             }
+        }  
+    if(hasAttacked == false){ // si no ha atacado entonces se mueve
+            int x = new Random().nextInt(25);
+            int y = new Random().nextInt(25);
+            moverPersonaje(personaje, x, y);
         }
         
 }
@@ -542,26 +554,24 @@ public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna
 
 // funcion que primero verifica cual personaje es para atacarlo
 public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_enemigo){
-    Component panel_enemigo = (Component)tablero[fila_enemigo][columna_enemigo]; //Le hago un casting de JPanel a Component
-    
-    if(panel_enemigo instanceof JLabel){
-    } 
-    else {
-
-        
+    // si es una defensa buscar dentro del thread de zombies
+    if(personaje.getTipo().equals("DEFENSA")){
+     for (int i = 0; i < zombies.size(); i++) {
+        // busca dentro del thread zombie si el enemigo es un zombie y esta en la posicion x,y y si nuestro personaje es una defensa
+        if((zombies.get(i).getPersonaje().getPosicion_x() == fila_enemigo) && 
+           (zombies.get(i).getPersonaje().getPosicion_y() == columna_enemigo)){
+            personaje.pelear(zombies.get(i).getPersonaje());
+            }
+        }
+    }else{ // sino es porque es un zombie y busca dentro del threadDefensa 
+        for (int i = 0; i < defensas.size(); i++) {
+        // busca dentro del thread zombie si el enemigo es un zombie y esta en la posicion x,y y si nuestro personaje es una defensa
+        if((defensas.get(i).getPersonaje().getPosicion_x() == fila_enemigo) && 
+           (defensas.get(i).getPersonaje().getPosicion_y() == columna_enemigo)){
+            personaje.pelear(defensas.get(i).getPersonaje());
+            }
+        }
     }
-    
-    
-//    if(personaje.getTipo().equals("ZOMBIE")){
-//        System.out.println("Estoy atacando a un zombie pts");
-//    
-//    
-//    
-//    }else{
-//    
-//    }
-
-
 }
 
 

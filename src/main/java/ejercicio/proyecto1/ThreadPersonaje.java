@@ -11,9 +11,9 @@ import static java.lang.Thread.sleep;
  * @author luisc
  */
 public class ThreadPersonaje extends Thread{
-    Personaje personaje;
-    Ventana refVentana;
-    boolean isRunning = true;
+    private Personaje personaje;
+    private Ventana refVentana;
+    private boolean isRunning = true;
 
     public ThreadPersonaje(Personaje personaje, Ventana refVentana) {
         this.personaje = personaje; 
@@ -34,23 +34,21 @@ public class ThreadPersonaje extends Thread{
 //                
 //            }
 
-            if(personaje.getTipo().equals("ZOMBIE")){ // si el personaje es un zombie
-                try {
-                //determina x y y personaje.mover()
-                refVentana.verificarRangoAdyacentes(personaje);
-                refVentana.moverPersonaje(personaje);
-                sleep(1000);
-   
-                } catch (InterruptedException ex) {
-                System.out.println("Se ha interrumpido el programa");
-                }
-            }
-            else{
+//            if(personaje.getTipo().equals("ZOMBIE")){ // si el personaje es un zombie
+//                try {
+//                //determina x y y personaje.mover()
+//                refVentana.verificarRangoAdyacentes(personaje);
+//                sleep(1000);
+//   
+//                } catch (InterruptedException ex) {
+//                System.out.println("Se ha interrumpido el programa");
+//                }
+//            }
+//            else{
                 
-                try {
+            try {
                 //determina x y y personaje.mover()
                 refVentana.verificarRangoAdyacentes(personaje);
-                refVentana.moverPersonaje(personaje);
                 sleep(1000);
    
             } catch (InterruptedException ex) {
@@ -58,7 +56,6 @@ public class ThreadPersonaje extends Thread{
                }
             } 
         }
-    }
     
     public void pausar(){
         this.isRunning = false;
@@ -71,7 +68,16 @@ public class ThreadPersonaje extends Thread{
         }
     }
     
-    
+    // getters and setters
+
+    public Personaje getPersonaje() {
+        return personaje;
+    }
+
+    public void setPersonaje(Personaje personaje) {
+        this.personaje = personaje;
+    }
+
     
     
     

@@ -51,7 +51,10 @@ public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int ca
     
     public void pelear(Personaje oponente) {
         int dañoTotal = this.cantidad_golpes * this.daño;
-        oponente.vida -= dañoTotal;  
+        oponente.vida -= dañoTotal;
+        int vida1 = oponente.vida;
+        String vida = Integer.toString(vida1);
+        oponente.getLabel().setText(vida);
         if (oponente.vida <= 0) {
             oponente.morir();
         }

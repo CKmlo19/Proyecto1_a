@@ -55,15 +55,15 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace pref="270" max="32767" attributes="0"/>
-                      <Component id="lblBorrarDefensa" min="-2" pref="208" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
                       <Component id="btnInicio" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
                       <Component id="tbnBorrarDefensa" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace pref="270" max="32767" attributes="0"/>
+                      <Component id="lblBorrarDefensa" min="-2" pref="208" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
@@ -83,10 +83,17 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblEspaciosEjercito" min="-2" max="-2" attributes="0"/>
-                  <Component id="pnlPanelJuego" min="-2" pref="881" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="pnlPanelJuego" min="-2" pref="881" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="lblEspaciosEjercito" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="btnAgregarImagen" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="280" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -122,8 +129,11 @@
               </Group>
               <Component id="pnlPanelJuego" min="-2" pref="631" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="lblEspaciosEjercito" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblEspaciosEjercito" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnAgregarImagen" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="18" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -212,6 +222,15 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Espacios ejercito: "/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnAgregarImagen">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Agregar Imagen"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnAgregarImagenMouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAgregarImagenActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

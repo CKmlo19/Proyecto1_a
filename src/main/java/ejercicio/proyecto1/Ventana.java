@@ -546,6 +546,32 @@ public boolean PelearDefensaCercana(Zombie zombie, Defensa defensa) {
     return false;
 }
 
+
+public void iniciarVerificacionPeleas() {
+    Thread verificacionThread = new Thread(() -> {
+        while (true) { //Bucle infinito para verificar constantemente las peleas
+            for (ThreadPersonaje defensaThread : defensas) {
+                Defensa defensa = (Defensa) defensaThread.getPersonaje();
+                for (ThreadPersonaje zombieThread : zombies) {
+                    Zombie zombie = (Zombie) zombieThread.getPersonaje();
+                    if (PelearDefensaCercana(zombie, defensa)) {
+                    } else if (PelearZombieCercano(defensa, zombie)) {
+                    }
+                }
+            }
+
+            try {
+                Thread.sleep(1000); //Pausa de 1 segundo entre verificaciones 
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
+    verificacionThread.start();
+}
+
+
+
      // getters and setters
 
     public JPanel getPnlDefensas() {

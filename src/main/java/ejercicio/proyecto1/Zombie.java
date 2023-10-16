@@ -31,7 +31,7 @@ public class Zombie extends Personaje {
         label.setForeground(new java.awt.Color(255, 255, 255));
         label.setFont(new java.awt.Font("Helvetica Neue", 0, 10)); // NOI18N
         label.setForeground(new java.awt.Color(255, 255, 255));
-       label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         label.setOpaque(true);
 //        try{
 //        ImageIcon gif = new ImageIcon(getClass().getResource("/ejercicio/proyecto1/zombie.gif"));

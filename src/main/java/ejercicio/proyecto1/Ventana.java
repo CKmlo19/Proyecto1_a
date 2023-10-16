@@ -332,8 +332,7 @@ public class Ventana extends javax.swing.JFrame {
                 tablero[fila][columna].setBackground(Color.LIGHT_GRAY);
                 tablero[fila][columna].setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 tablero[fila][columna].setLayout(new java.awt.BorderLayout(1,1));
-                pnlPanelJuego.add(tablero[fila][columna]);
-                
+                pnlPanelJuego.add(tablero[fila][columna]);         
             }
         }
     }

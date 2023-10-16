@@ -365,6 +365,22 @@ public class Ventana extends javax.swing.JFrame {
             pnlPanelJuego.repaint();
         }
     }
+    
+public void moverDefensaAereo(Defensa defensa) {
+    if (defensa.getTipo().equals("AEREO")) {
+        int filaActual = defensa.getPosicion_x();
+        int columnaActual = defensa.getPosicion_y();
+
+        int x = new Random().nextInt(25);
+        int y = new Random().nextInt(25);
+
+        //Verificar si la nueva posición es válida y si la casilla está desocupada
+        if (esUbicacionValida(tablero, x, y) && verificarCasilla(x, y)) {
+            moverPersonaje(defensa, x, y);
+        }
+    }
+}
+
     private void generarZombies(int size){
         
         for (int i = 0; i < size; i++) {

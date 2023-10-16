@@ -10,6 +10,8 @@ import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -238,17 +240,23 @@ public class Ventana extends javax.swing.JFrame {
     private void btnDetenerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetenerActionPerformed
        if (btnDetener.getText().equals("Pausar")){
             for (int i = 0; i < zombies.size(); i++) {
-            ThreadPersonaje get = zombies.get(i);
-            get.suspend();
-           // get.pausar();
+                ThreadPersonaje get = zombies.get(i);
+                get.pausar();
+            }
+            for (int i = 0; i < defensas.size(); i++) {
+                ThreadPersonaje get = zombies.get(i);
+                get.pausar();
             }
         btnDetener.setText("Reanudar");
        }
        else{
-        for (int i = 0; i < zombies.size(); i++) {
-            ThreadPersonaje get = zombies.get(i);
-            get.resume();
-            //get.reanudar();
+            for (int i = 0; i < zombies.size(); i++) {
+                ThreadPersonaje get = zombies.get(i);
+                get.reanudar();
+            }
+            for (int i = 0; i < defensas.size(); i++) {
+                ThreadPersonaje get = defensas.get(i);
+                get.reanudar();
             }
         btnDetener.setText("Pausar");
         }

@@ -350,32 +350,14 @@ public class Ventana extends javax.swing.JFrame {
           casilla_tablero.add(personaje.getLabel());
     }
    
-    
+    // Funcion que mueve personajes
     public void moverPersonaje(Personaje personaje, int x, int y){
-       // x = new Random().nextInt(25);
-        //y = new Random().nextInt(25);
-        boolean isRunning = true;
-        
-        //while(isRunning){
-            //if(verificarCasilla(x, y)){
-               // JPanel panel_label = tablero[x][y]; // obtiene el panel donde se ubica el JLabel
-               // si esta ocupado entonces no hace nada
+       
                if(matriz_personaje[x][y] == null){
                     matriz_personaje[personaje.getPosicion_x()][personaje.getPosicion_y()] = null;
                     addComponenteTablero(personaje, x, y);
                     pnlPanelJuego.repaint();
-                    isRunning = false;
                }
-                 //panel_label.removeAll(); // elimina todo lo que esta dentro de este panel
-  
-           // }
-            //else{
-               // x = new Random().nextInt(25);
-               // y = new Random().nextInt(25);
-           // }
-            //pnlPanelJuego.repaint();
-     
-      //  }
     }
     private void generarZombies(int size){
         

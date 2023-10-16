@@ -16,21 +16,40 @@ public enum TipoZombie {
     CHOQUE("Zombie de Choque", "ruta_del_zombie_choque.gif");
 
     private final String nombre;
-    //private final String rutaGif;
+    private final String rutaGif;
 
     private TipoZombie(String nombre, String rutaImagen) {
         this.nombre = nombre;
-        //this.rutaGif = rutaImagen;
+        this.rutaGif = rutaImagen;
+    }
+
+    public static TipoZombie getAEREO() {
+        return AEREO;
+    }
+
+    public static TipoZombie getCONTACTO() {
+        return CONTACTO;
+    }
+
+    public static TipoZombie getMEDIANO_ALCANCE() {
+        return MEDIANO_ALCANCE;
+    }
+
+    public static TipoZombie getCHOQUE() {
+        return CHOQUE;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-   // public String getRutaImagen() {
-      //  return rutaGif;
-   // }
+    public String getRutaGif() {
+        return rutaGif;
+    }
+       
+   
 }
+
 
 
 

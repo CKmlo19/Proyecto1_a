@@ -514,7 +514,7 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
    
 }
 
-public boolean PelearZombieCercano (Defensa defensa, Zombie zombie) {
+public void PelearZombieCercano(Defensa defensa, Zombie zombie) {
     int xDefensa = defensa.getPosicion_x();
     int yDefensa = defensa.getPosicion_y();
     int xZombie = zombie.getPosicion_x();
@@ -523,40 +523,59 @@ public boolean PelearZombieCercano (Defensa defensa, Zombie zombie) {
     int distancia = Math.abs(xDefensa - xZombie) + Math.abs(yDefensa - yZombie);
 
     if (distancia <= defensa.getRango()) {
-        defensa.pelear(zombie); //Llamar a la función pelear de la defensa
-        return true;
+        int nuevoX, nuevoY;
+        
+        //Intenta encontrar una nueva posición válida para el zombie cerca de la defensa
+        do {
+            nuevoX = xDefensa + (int) (Math.random() * 2) * 2 - 1; //Moverse -1 o 1 en X
+            nuevoY = yDefensa + (int) (Math.random() * 2) * 2 - 1; // Moverse -1 o 1 en Y
+        } 
+        
+        while (!esUbicacionValida(tablero, nuevoX, nuevoY));
+
+        //Mueve al zombie a la nueva posición 
+        moverPersonaje(zombie, nuevoX, nuevoY);
+
+        //Realiza la pelea
+        defensa.pelear(zombie);
     }
-
-    return false;
 }
-
-public boolean PelearDefensaCercana(Zombie zombie, Defensa defensa) {
+public void PelearDefensaCercana(Zombie zombie, Defensa defensa) {
     int xZombie = zombie.getPosicion_x();
     int yZombie = zombie.getPosicion_y();
     int xDefensa = defensa.getPosicion_x();
     int yDefensa = defensa.getPosicion_y();
 
-    int distancia = Math.abs(xZombie - xDefensa) + Math.abs(yZombie - yDefensa);
+    int distancia = Math.abs(xDefensa - xZombie) + Math.abs(yDefensa - yZombie);
 
     if (distancia <= zombie.getRango()) {
-        zombie.pelear(defensa); //Llamar a la función pelear del zombie
-        return true;
-    }
+        int nuevoX, nuevoY;
+        
+        //Intenta encontrar una nueva posición válida para el zombie cerca de la defensa
+        do {
+            nuevoX = xDefensa + (int) (Math.random() * 2) * 2 - 1; // Moverse -1 o 1 en X
+            nuevoY = yDefensa + (int) (Math.random() * 2) * 2 - 1; // Moverse -1 o 1 en Y
+        } while (!esUbicacionValida(tablero, nuevoX, nuevoY));
 
-    return false;
+        //Mueve al zombie a la nueva posición 
+        moverPersonaje(zombie, nuevoX, nuevoY);
+
+        //Realiza la pelea
+        zombie.pelear(defensa);
+    }
 }
 
 
 public void iniciarVerificacionPeleas() {
     Thread verificacionThread = new Thread(() -> {
+        
         while (true) { //Bucle infinito para verificar constantemente las peleas
             for (ThreadPersonaje defensaThread : defensas) {
                 Defensa defensa = (Defensa) defensaThread.getPersonaje();
                 for (ThreadPersonaje zombieThread : zombies) {
                     Zombie zombie = (Zombie) zombieThread.getPersonaje();
-                    if (PelearDefensaCercana(zombie, defensa)) {
-                    } else if (PelearZombieCercano(defensa, zombie)) {
-                    }
+                    PelearDefensaCercana(zombie, defensa);
+                    PelearZombieCercano(defensa, zombie);
                 }
             }
 

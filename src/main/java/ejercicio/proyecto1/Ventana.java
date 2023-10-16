@@ -514,9 +514,38 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
    
 }
 
+public boolean PelearZombieCercano (Defensa defensa, Zombie zombie) {
+    int xDefensa = defensa.getPosicion_x();
+    int yDefensa = defensa.getPosicion_y();
+    int xZombie = zombie.getPosicion_x();
+    int yZombie = zombie.getPosicion_y();
 
-  
-     
+    int distancia = Math.abs(xDefensa - xZombie) + Math.abs(yDefensa - yZombie);
+
+    if (distancia <= defensa.getRango()) {
+        defensa.pelear(zombie); //Llamar a la función pelear de la defensa
+        return true;
+    }
+
+    return false;
+}
+
+public boolean PelearDefensaCercana(Zombie zombie, Defensa defensa) {
+    int xZombie = zombie.getPosicion_x();
+    int yZombie = zombie.getPosicion_y();
+    int xDefensa = defensa.getPosicion_x();
+    int yDefensa = defensa.getPosicion_y();
+
+    int distancia = Math.abs(xZombie - xDefensa) + Math.abs(yZombie - yDefensa);
+
+    if (distancia <= zombie.getRango()) {
+        zombie.pelear(defensa); //Llamar a la función pelear del zombie
+        return true;
+    }
+
+    return false;
+}
+
      // getters and setters
 
     public JPanel getPnlDefensas() {

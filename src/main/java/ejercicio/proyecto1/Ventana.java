@@ -460,55 +460,7 @@ public class Ventana extends javax.swing.JFrame {
             }
             //label.setVisible(true);
     }
-     
-    private double calcularDistancia(Personaje zombie, Personaje defensa) {
-        int x1 = zombie.getPosicion_x();
-        int y1 = zombie.getPosicion_y();
-        int x2 = defensa.getPosicion_x();
-        int y2 = defensa.getPosicion_y();
-
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-    }
-     
-    public void zombieAtacarDefensaMasCercana(Zombie zombie) {
-    
-    Defensa defensaMasCercana = null;
-    double distanciaMinima = Math.sqrt(25 * 25 + 25 * 25);
-
-
-    for (ThreadPersonaje threadDefensa : defensas) {
-        Defensa defensa = (Defensa) threadDefensa.getPersonaje();
-        double distancia = calcularDistancia(zombie, defensa);
-
-        if (distancia < distanciaMinima) {
-            distanciaMinima = distancia;
-            defensaMasCercana = defensa;
-        }
-    }
-
-    if (defensaMasCercana != null) {
-        zombie.pelear(defensaMasCercana);
-    }
-}     
-
-public void defensaAtacarZombieMasCercano(Defensa defensa) {
-    Zombie zombieMasCercano = null;
-    double distanciaMinima  = Math.sqrt(25 * 25 + 25 * 25);
-
-    for (ThreadPersonaje threadZombie : zombies) {
-        Zombie zombie = (Zombie) threadZombie.getPersonaje();
-        double distancia = calcularDistancia(defensa, zombie);
-
-        if (distancia < distanciaMinima) {
-            distanciaMinima = distancia;
-            zombieMasCercano = zombie;
-        }
-    }
-
-    if (zombieMasCercano != null) {
-        defensa.pelear(zombieMasCercano);
-    }
-}
+   
 // verifica si hay algun zombie en el rango de dicha defensa
 public void verificarRangoAdyacentes(Personaje personaje){
         boolean hasAttacked = false;

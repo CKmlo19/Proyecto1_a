@@ -23,29 +23,7 @@ public class ThreadPersonaje extends Thread{
     @Override
     public void run() {
         
-        while(isRunning){
-            
-//            try{ // si logra hacer el casting significa que es un zombie
-//                Zombie z1 = (Zombie) personaje;
-//                System.out.println("Se puede hacer");
-//            } 
-//            catch(ClassCastException ex){
-//                System.out.println("Error, no se puede hacer el casting");
-//                
-//            }
-
-//            if(personaje.getTipo().equals("ZOMBIE")){ // si el personaje es un zombie
-//                try {
-//                //determina x y y personaje.mover()
-//                refVentana.verificarRangoAdyacentes(personaje);
-//                sleep(1000);
-//   
-//                } catch (InterruptedException ex) {
-//                System.out.println("Se ha interrumpido el programa");
-//                }
-//            }
-//            else{
-                
+        while(isRunning){   
             try {
                 //determina x y y personaje.mover()
                 refVentana.verificarRangoAdyacentes(personaje);

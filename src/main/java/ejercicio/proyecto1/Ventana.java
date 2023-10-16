@@ -25,6 +25,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Ventana extends javax.swing.JFrame {
    private ArrayList<ThreadPersonaje> zombies;
    private ArrayList<ThreadPersonaje> defensas;
+   private Personaje[][] matriz_personaje;
    private Defensa defensa_seleccionada;
    private int ejercito;
    private boolean enable = false;
@@ -40,11 +41,12 @@ public class Ventana extends javax.swing.JFrame {
         zombies = new ArrayList<ThreadPersonaje>();
         defensas = new ArrayList<ThreadPersonaje>();
         tablero = new JPanel[25][25];
+        matriz_personaje = new Personaje[25][25];
         initComponents();
         lblSeleccion_Defensa.setVisible(enable);
         pnlDefensas.setLayout(new java.awt.GridLayout());
         crearTablero(); // funcion que crea el tablero
-        generarZombies(1);
+        generarZombies(2);
         generarDefensasContenedor(7);
     }
     /**
@@ -214,25 +216,22 @@ public class Ventana extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
+
+    }//GEN-LAST:event_btnInicioActionPerformed
+
+    private void btnInicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnInicioMouseClicked
         // TODO add your handling code here:
          for (int i = 0; i < zombies.size(); i++) {
             ThreadPersonaje get = zombies.get(i);
             get.start();
             btnInicio.setEnabled(false);
         }
-//        for (int i = 0; i < defensas.size(); i++) {
-//            ThreadPersonaje get = defensas.get(i);
-//            get.start();
-//            btnInicio.setEnabled(false);
-//        }
+        for (int i = 0; i < defensas.size(); i++) {
+            ThreadPersonaje get = defensas.get(i);
+            get.start();
+            btnInicio.setEnabled(false);
+        }
          btnDetener.setEnabled(true);
-    }//GEN-LAST:event_btnInicioActionPerformed
-
-    private void btnInicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnInicioMouseClicked
-        // TODO add your handling code here:
-//        for (int i = 0; i < zombies.size(); i++) {
-//            ThreadPersonaje get = zombies.get(i);
-//            get.start();
             
     }//GEN-LAST:event_btnInicioMouseClicked
 
@@ -347,6 +346,7 @@ public class Ventana extends javax.swing.JFrame {
     public void addComponenteTablero(Personaje personaje, int fila, int columna){
           JPanel casilla_tablero = getJPanelTablero(fila, columna);
           personaje.setPosicion_x(fila); personaje.setPosicion_y(columna);
+          matriz_personaje[fila][columna] = personaje;
           casilla_tablero.add(personaje.getLabel());
     }
    
@@ -359,9 +359,13 @@ public class Ventana extends javax.swing.JFrame {
         //while(isRunning){
             //if(verificarCasilla(x, y)){
                // JPanel panel_label = tablero[x][y]; // obtiene el panel donde se ubica el JLabel
-                addComponenteTablero(personaje, x, y);
-                pnlPanelJuego.repaint();
-                isRunning = false;
+               // si esta ocupado entonces no hace nada
+               if(matriz_personaje[x][y] == null){
+                    matriz_personaje[personaje.getPosicion_x()][personaje.getPosicion_y()] = null;
+                    addComponenteTablero(personaje, x, y);
+                    pnlPanelJuego.repaint();
+                    isRunning = false;
+               }
                  //panel_label.removeAll(); // elimina todo lo que esta dentro de este panel
   
            // }
@@ -380,14 +384,13 @@ public class Ventana extends javax.swing.JFrame {
             // crear el zombie aleatoriamente, del tipo que corresponda
             Zombie zombie = new Zombie(TipoZombie.CONTACTO, "Zombie1", 100, 1, 1, 1, 1, "ZOMBIE", 1, 1);
             
+            // agrega el zombie solo en la ultima casilla exterior (0,0) hasta (0, 24) y (24,0) hasta la (24,24)
             setAparicion(zombie);
             
             // Crear el thread
             ThreadPersonaje tp =  new ThreadPersonaje(zombie, this);
             zombies.add(tp);
             cantidad_zombies++;
-            
-            // agrega el zombie solo en la ultima casilla exterior (0,0) hasta (0, 24) y (24,0) hasta la (24,24)
              
         }
         
@@ -414,25 +417,23 @@ public class Ventana extends javax.swing.JFrame {
         ThreadPersonaje tp =  new ThreadPersonaje(def2, this);
         defensas.add(tp);  
         addComponenteTablero(def2, fila, columna);
+        cantidad_defensas++;
         pnlPanelJuego.repaint();
     }
     
     public void generarDefensasContenedor(int size){
         for (int i = 0; i < size; i++) {
-            Defensa defensa = new Defensa(TipoDefensa.BLOQUES, "THE WALL", 100, 0, 1, 1, 1, "DEFENSA", 0, 0);
+            Defensa defensa = new Defensa(TipoDefensa.BLOQUES, "THE WALL", 100, 1, 1, 1, 1, "DEFENSA", 1, 1);
             defensa.getLabel().addMouseListener(new Listener_Defensas(this, defensa));
             cantidad_defensas++;
             pnlDefensas.add(defensa.getLabel());
         }
     }
     
-     public void setAparicion(Personaje zombie){
+    public void setAparicion(Personaje zombie){
         // variables que sustituyen para spawnear en los bordes
         int x;
         int y;
-        
-        // el zombie
-        JLabel label = zombie.getLabel();
         
         int colOrRow = (new Random()).nextInt(2);//0: col  1: filas
         int dir = (new Random()).nextInt(2);//0: primera  1: ultima
@@ -460,16 +461,16 @@ public class Ventana extends javax.swing.JFrame {
             //label.setVisible(true);
     }
      
-private double calcularDistancia(Personaje zombie, Personaje defensa) {
-    int x1 = zombie.getPosicion_x();
-    int y1 = zombie.getPosicion_y();
-    int x2 = defensa.getPosicion_x();
-    int y2 = defensa.getPosicion_y();
+    private double calcularDistancia(Personaje zombie, Personaje defensa) {
+        int x1 = zombie.getPosicion_x();
+        int y1 = zombie.getPosicion_y();
+        int x2 = defensa.getPosicion_x();
+        int y2 = defensa.getPosicion_y();
 
-   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
      
-public void zombieAtacarDefensaMasCercana(Zombie zombie) {
+    public void zombieAtacarDefensaMasCercana(Zombie zombie) {
     
     Defensa defensaMasCercana = null;
     double distanciaMinima = Math.sqrt(25 * 25 + 25 * 25);
@@ -510,9 +511,9 @@ public void defensaAtacarZombieMasCercano(Defensa defensa) {
 }
 // verifica si hay algun zombie en el rango de dicha defensa
 public void verificarRangoAdyacentes(Personaje personaje){
+        boolean hasAttacked = false;
         int fila = personaje.getPosicion_x();
         int columna = personaje.getPosicion_y();
-        boolean hasAttacked = false;
         System.out.println("Elemento en: ("+ fila + ", " + columna + ")");
         
         
@@ -526,19 +527,22 @@ public void verificarRangoAdyacentes(Personaje personaje){
                 int columnaAdyacente = columna + j;
 
                 if (esUbicacionValida(tablero, filaAdyacente, columnaAdyacente) && (filaAdyacente != fila || columnaAdyacente != columna)) {
-                    if(verificarCasilla(filaAdyacente, columnaAdyacente) == false){ // si no esta vacia es que contiene algo
+                    if((verificarCasilla(filaAdyacente, columnaAdyacente) == false) &&
+                       (matriz_personaje[filaAdyacente][columnaAdyacente].getTipo() != personaje.getTipo())){ // si no esta vacia y si los personajes no son del mismo tipo
                         atacarPersonaje(personaje, filaAdyacente, columnaAdyacente); // ataca al enemigo
                         hasAttacked = true;
-                        break externo;
-                        
+                        break externo;  
                     }
                     JPanel elementoAdyacente = tablero[filaAdyacente][columnaAdyacente];
                     System.out.println("Elemento en [" + filaAdyacente + "][" + columnaAdyacente + "]: " + elementoAdyacente);
                     
                 }
+                else{
+                    hasAttacked = false;
+                }
             }
-        }  
-    if(hasAttacked == false){ // si no ha atacado entonces se mueve
+        }
+    if((hasAttacked == false) && (personaje.getTipo().equals("ZOMBIE"))){ // si no ha atacado entonces se mueve
             int x = new Random().nextInt(25);
             int y = new Random().nextInt(25);
             moverPersonaje(personaje, x, y);
@@ -555,23 +559,9 @@ public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna
 // funcion que primero verifica cual personaje es para atacarlo
 public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_enemigo){
     // si es una defensa buscar dentro del thread de zombies
-    if(personaje.getTipo().equals("DEFENSA")){
-     for (int i = 0; i < zombies.size(); i++) {
-        // busca dentro del thread zombie si el enemigo es un zombie y esta en la posicion x,y y si nuestro personaje es una defensa
-        if((zombies.get(i).getPersonaje().getPosicion_x() == fila_enemigo) && 
-           (zombies.get(i).getPersonaje().getPosicion_y() == columna_enemigo)){
-            personaje.pelear(zombies.get(i).getPersonaje());
-            }
-        }
-    }else{ // sino es porque es un zombie y busca dentro del threadDefensa 
-        for (int i = 0; i < defensas.size(); i++) {
-        // busca dentro del thread zombie si el enemigo es un zombie y esta en la posicion x,y y si nuestro personaje es una defensa
-        if((defensas.get(i).getPersonaje().getPosicion_x() == fila_enemigo) && 
-           (defensas.get(i).getPersonaje().getPosicion_y() == columna_enemigo)){
-            personaje.pelear(defensas.get(i).getPersonaje());
-            }
-        }
-    }
+    Personaje enemigo = matriz_personaje[fila_enemigo][columna_enemigo];
+    personaje.pelear(enemigo);
+   
 }
 
 
@@ -583,24 +573,12 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
         return pnlDefensas;
     }
 
-    public ArrayList<ThreadPersonaje> getZombies() {
-        return zombies;
-    }
-
-    public ArrayList<ThreadPersonaje> getDefensas() {
-        return defensas;
-    }
-
     public JPanel[][] getTablero() {
         return tablero;
     }
 
     public JPanel getPnlPanelJuego() {
         return pnlPanelJuego;
-    }
-
-    public void setLblSeleccion_Defensa(JLabel lblSeleccion_Defensa) {
-        this.lblSeleccion_Defensa = lblSeleccion_Defensa;
     }
 
 

@@ -60,6 +60,18 @@ public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int ca
         }
     }
     
+private void AtaqueAZombieAereo(Personaje zombie, TipoZombie tipoZombie, TipoDefensa tipoDefensa) {
+    
+    if (tipoZombie == TipoZombie.AEREO && tipoDefensa == TipoDefensa.AEREO) {
+        pelear(zombie);
+    } 
+    
+    else {
+        System.out.println("Esta defensa no puede atacar a un Zombie Aéreo.");
+    }
+}
+
+    
     
     
     // getters and setters

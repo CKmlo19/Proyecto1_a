@@ -10,6 +10,8 @@ import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,7 +29,7 @@ public class Ventana extends javax.swing.JFrame {
    private ArrayList<ThreadPersonaje> defensas;
    private Personaje[][] matriz_personaje;
    private Defensa defensa_seleccionada;
-   private int ejercito;
+   private int ejercito = 20;
    private boolean enable = false;
    private boolean enable_borrar = false;
    int cantidad_defensas;
@@ -238,26 +240,26 @@ public class Ventana extends javax.swing.JFrame {
     private void btnDetenerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetenerActionPerformed
        if (btnDetener.getText().equals("Pausar")){
             for (int i = 0; i < zombies.size(); i++) {
-            ThreadPersonaje get = zombies.get(i);
-            get.suspend();
-           // get.pausar();
+                ThreadPersonaje get = zombies.get(i);
+                get.pausar();
+            }
+            for (int i = 0; i < defensas.size(); i++) {
+                ThreadPersonaje get = zombies.get(i);
+                get.pausar();
             }
         btnDetener.setText("Reanudar");
        }
        else{
-        for (int i = 0; i < zombies.size(); i++) {
-            ThreadPersonaje get = zombies.get(i);
-            get.resume();
-            //get.reanudar();
+            for (int i = 0; i < zombies.size(); i++) {
+                ThreadPersonaje get = zombies.get(i);
+                get.reanudar();
+            }
+            for (int i = 0; i < defensas.size(); i++) {
+                ThreadPersonaje get = defensas.get(i);
+                get.reanudar();
             }
         btnDetener.setText("Pausar");
         }
-        
-//        for (int i = 0; i < zombies.size(); i++) {
-//            ThreadPersonaje get = zombies.get(i);
-//            get.detener();
-//        }
-//       btnDetener.setText("Reanudar");
     }//GEN-LAST:event_btnDetenerActionPerformed
 
     private void tbnBorrarDefensaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbnBorrarDefensaMouseClicked
@@ -352,12 +354,16 @@ public class Ventana extends javax.swing.JFrame {
    
     // Funcion que mueve personajes
     public void moverPersonaje(Personaje personaje, int x, int y){
-       
                if(matriz_personaje[x][y] == null){
                     matriz_personaje[personaje.getPosicion_x()][personaje.getPosicion_y()] = null;
                     addComponenteTablero(personaje, x, y);
                     pnlPanelJuego.repaint();
                }
+        if(matriz_personaje[x][y] == null){
+            matriz_personaje[personaje.getPosicion_x()][personaje.getPosicion_y()] = null;
+            addComponenteTablero(personaje, x, y);
+            pnlPanelJuego.repaint();
+        }
     }
     private void generarZombies(int size){
         
@@ -422,27 +428,21 @@ public class Ventana extends javax.swing.JFrame {
             if (colOrRow == 0){ // va a colocarse en las columnas (x, 0), (x, 24)
                 x = new Random().nextInt(25);
                 if (dir == 0){
-                   // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 0
                     addComponenteTablero(zombie, x, 0);
                 }
                 else{
-                   // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 24
                     addComponenteTablero(zombie, x, 24);
                 }
             }else{ // va a colocarse en las filas (0, y), (24, y)    
                 y = new Random().nextInt(25);
                 if (dir == 0){
-                   // zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 0
                     addComponenteTablero(zombie, 0, y);
                 }
                 else{
-                  //  zombie.setPosicion_x(3); zombie.setPosicion_y(3); // 24
                     addComponenteTablero(zombie, 24, y);
                 }
             }
-            //label.setVisible(true);
     }
-   
 // verifica si hay algun zombie en el rango de dicha defensa
 public void verificarRangoAdyacentes(Personaje personaje){
         boolean hasAttacked = false;
@@ -541,9 +541,6 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
     }
 
     
-    
-    
-        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarImagen;
     private javax.swing.JButton btnDetener;
@@ -557,3 +554,4 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
     private javax.swing.JToggleButton tbnBorrarDefensa;
     // End of variables declaration//GEN-END:variables
 }
+

@@ -13,7 +13,8 @@ import static java.lang.Thread.sleep;
 public class ThreadPersonaje extends Thread{
     private Personaje personaje;
     private Ventana refVentana;
-    private boolean isRunning = true;
+    private boolean isRunning = true; // este es para detener el juego
+    private boolean suspendFlag = false;
 
     public ThreadPersonaje(Personaje personaje, Ventana refVentana) {
         this.personaje = personaje; 
@@ -25,25 +26,28 @@ public class ThreadPersonaje extends Thread{
         
         while(isRunning){   
             try {
-                //determina x y y personaje.mover()
-                refVentana.verificarRangoAdyacentes(personaje);
+                
+                refVentana.verificarRangoAdyacentes(personaje); // cada personaje verifica su rango
                 sleep(1000);
+                synchronized (this) {
+                    while(suspendFlag){
+                        wait();
+                    }
+                }
    
             } catch (InterruptedException ex) {
                 System.out.println("Se ha interrumpido el programa");
                }
             } 
-        }
-    
-    public void pausar(){
-        this.isRunning = false;
     }
     
-    public void reanudar(){
-        this.isRunning = true;
-        synchronized (this) {
-            notify();
-        }
+    public void pausar(){
+        this.suspendFlag = true;
+    }
+    
+    public synchronized void reanudar(){
+        this.suspendFlag = false;
+        notify();
     }
     
     // getters and setters

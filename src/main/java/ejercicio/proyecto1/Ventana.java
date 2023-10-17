@@ -19,6 +19,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.Queue;
+import java.util.LinkedList;
+
 
 /**
  *
@@ -459,6 +462,8 @@ public void moverDefensaAereo(Defensa defensa) {
                 }
             }
     }
+        
+    
 // verifica si hay algun zombie en el rango de dicha defensa
 public void verificarRangoAdyacentes(Personaje personaje){
         boolean hasAttacked = false;
@@ -492,13 +497,65 @@ public void verificarRangoAdyacentes(Personaje personaje){
                 }
             }
         }
-    if((hasAttacked == false) && (personaje.getTipo().equals("ZOMBIE"))){ // si no ha atacado entonces se mueve
-            int x = new Random().nextInt(25);
-            int y = new Random().nextInt(25);
-            moverPersonaje(personaje, x, y);
+ if (personaje.getTipo().equals("ZOMBIE") && !hasAttacked) {
+        Defensa defensaCercana = encontrarDefensaCercana(fila, columna);
+
+        if (defensaCercana != null) {
+            moverZombieHaciaDefensa(personaje, defensaCercana);
         }
-        
+    }
 }
+
+public Defensa encontrarDefensaCercana(int filaZombie, int columnaZombie) {
+    Defensa defensaCercana = null; //defensaCercana se inicializa en null
+    
+    //Garantiza que la primera distancia calculada siempre será menor que  distanciaMinima
+    double distanciaMinima = Double.MAX_VALUE; 
+    
+    //Bucle for para iterar a través de las defensas
+    for (ThreadPersonaje defensaThread : defensas) {
+        
+        Defensa defensa = (Defensa) defensaThread.getPersonaje(); //Obtenemos la defensa actual
+        int filaDefensa = defensa.getPosicion_x(); //Obtenemos la fila de la defensa
+        int columnaDefensa = defensa.getPosicion_y(); //Obtenemos la columna de la defensa
+
+        //Calculamos la distancia con el teorema de Pitágoras
+        //Se puede aplicar Pitágoras ya que el juego es en un plano cartesiano
+        double distancia = Math.sqrt(Math.pow(filaDefensa - filaZombie, 2) + Math.pow(columnaDefensa - columnaZombie, 2));
+
+        //Si la distancia calculada es menor que la distancia mínima registrada hasta ahora
+        if (distancia < distanciaMinima) {
+            distanciaMinima = distancia; //Actualizamos la distancia mínima
+            defensaCercana = defensa; //Actualizamos la referencia a la defensa más cercana
+        }
+    }
+
+    //Se retorna la defensa más cercana encontrada
+    return defensaCercana;
+}
+
+public void moverZombieHaciaDefensa(Personaje zombie, Defensa defensa) {
+    int filaZombie = zombie.getPosicion_x(); //Obtenemos la fila actual del zombie
+    int columnaZombie = zombie.getPosicion_y(); //Obtenemos la columna actual del zombie
+    int filaDefensa = defensa.getPosicion_x(); //Obtenemos la fila de la defensa
+    int columnaDefensa = defensa.getPosicion_y(); //Obtenemos la columna de la defensa
+
+
+    int nuevoX = Integer.compare(filaDefensa - filaZombie, 0); //Diferencia en la fila
+    int nuevoY = Integer.compare(columnaDefensa - columnaZombie, 0); //Diferencia en la columna
+
+    //Calculamos las nuevas coordenadas para el zombie
+    int nuevaFila = filaZombie + nuevoX; 
+    int nuevaColumna = columnaZombie + nuevoY; 
+
+    //Verificamos si la nueva ubicación es válida en el tablero y si la casilla está disponible
+    if (esUbicacionValida(tablero, nuevaFila, nuevaColumna) && verificarCasilla(nuevaFila, nuevaColumna)) {
+        moverPersonaje(zombie, nuevaFila, nuevaColumna); //Movemos el zombie 
+    }
+}
+
+
+
 
 // Funcion que determina si la ubicacion es valida para el personaje de la matriz
 public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna) {

@@ -285,9 +285,6 @@ public class Ventana extends javax.swing.JFrame {
                     Zombie z1 = (Zombie)zombies.get(0).getPersonaje();
                     File archivoSeleccionado = fileChooser.getSelectedFile();
                     ImageIcon imagen = new ImageIcon(archivoSeleccionado.getAbsolutePath());
-                    Image imagenRedimensionada = imagen.getImage().getScaledInstance(z1.getLabel().getWidth(), z1.getLabel().getHeight(), Image.SCALE_SMOOTH);
-                    
-                    z1.getLabel().setIcon(new ImageIcon(imagenRedimensionada));
                 }
     }//GEN-LAST:event_btnAgregarImagenMouseClicked
  
@@ -352,7 +349,6 @@ public class Ventana extends javax.swing.JFrame {
           JPanel casilla_tablero = getJPanelTablero(fila, columna);
           personaje.setPosicion_x(fila); personaje.setPosicion_y(columna);
           matriz_personaje[fila][columna] = personaje;
-          casilla_tablero.add(personaje.getLabel());
     }
    
     // Funcion que mueve personajes
@@ -431,9 +427,7 @@ public void moverDefensaAereo(Defensa defensa) {
     public void generarDefensasContenedor(int size){
         for (int i = 0; i < size; i++) {
             Defensa defensa = new Defensa(TipoDefensa.BLOQUES, "THE WALL", 100, 1, 1, 1, 1, "DEFENSA", 1, 1);
-            defensa.getLabel().addMouseListener(new Listener_Defensas(this, defensa));
             cantidad_defensas++;
-            pnlDefensas.add(defensa.getLabel());
         }
     }
     
@@ -545,12 +539,12 @@ public void moverZombieHaciaDefensa(Personaje zombie, Defensa defensa) {
     int nuevoY = Integer.compare(columnaDefensa - columnaZombie, 0); //Diferencia en la columna
 
     //Calculamos las nuevas coordenadas para el zombie
-    int nuevaFila = filaZombie + nuevoX; 
-    int nuevaColumna = columnaZombie + nuevoY; 
+    int nuevaFila = filaZombie + nuevoX; //Nueva fila
+    int nuevaColumna = columnaZombie + nuevoY; //Nueva columna
 
     //Verificamos si la nueva ubicación es válida en el tablero y si la casilla está disponible
     if (esUbicacionValida(tablero, nuevaFila, nuevaColumna) && verificarCasilla(nuevaFila, nuevaColumna)) {
-        moverPersonaje(zombie, nuevaFila, nuevaColumna); //Movemos el zombie 
+        moverPersonaje(zombie, nuevaFila, nuevaColumna); // Movemos el zombie a la nueva ubicación
     }
 }
 

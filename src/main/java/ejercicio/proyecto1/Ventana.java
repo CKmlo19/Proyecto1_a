@@ -284,7 +284,7 @@ public class Ventana extends javax.swing.JFrame {
                 if (resultado == JFileChooser.APPROVE_OPTION) {
                     Zombie z1 = (Zombie)zombies.get(0).getPersonaje();
                     File archivoSeleccionado = fileChooser.getSelectedFile();
-                    ImageIcon imagen = new ImageIcon(archivoSeleccionado.getAbsolutePath());
+                    ImageIcon imagen = new ImageIcon(archivoSeleccionado.getAbsolutePath());  
                 }
     }//GEN-LAST:event_btnAgregarImagenMouseClicked
  
@@ -564,6 +564,53 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
     personaje.pelear(enemigo);
    
 }
+
+private boolean nivelGanado() {
+    for (ThreadPersonaje defensaThread : defensas) {
+        Defensa defensa = (Defensa) defensaThread.getPersonaje();
+        if (defensa.getVida() > 0) {
+            return false; // Si al menos una defensa está viva, retorna falso
+        }
+    }
+    return true; // Todas las defensas están muertas
+}
+
+
+private boolean nivelPerdido() {
+    for (ThreadPersonaje zombieThread : zombies) {
+        Personaje zombie = zombieThread.getPersonaje();
+        if (zombie.getVida() > 0) {
+            return false; // Si al menos un zombie está vivo, retorna falso
+        }
+    }
+    return true; // Todos los zombies están muertos
+}
+
+public void avanzarNivel(Personaje personajeActual) {
+    // Verifica si se ha ganado el juego (todas las defensas muertas)
+    if (nivelGanado()) {
+        System.out.println("¡Has ganado el nivel!");
+    } else if (nivelPerdido()) {
+        System.out.println("¡Has perdido el nivel!");
+    } else {
+        System.out.println("Has avanzado al nivel " + (personajeActual.getNivel() + 1));
+        int nivelActual = personajeActual.getNivel();
+        personajeActual.setNivel(nivelActual + 1);
+        aumentarStatsPorNivel(personajeActual);
+    }
+}
+
+public void aumentarStatsPorNivel(Personaje personaje) {
+    int incrementoVida = (int) (Math.random() * 16 + 5); //Valor aleatorio entre 5 y 20
+    int incrementoDaño = (int) (Math.random() * 16 + 5); 
+    
+    personaje.setVida(personaje.getVida() + incrementoVida);
+    personaje.setDaño(personaje.getDaño() + incrementoDaño);
+
+    System.out.println("Nivel " + personaje.getNivel() + ": Se han aumentado las estadísticas de los personajes.");
+}
+
+
      // getters and setters
 
     public JPanel getPnlDefensas() {

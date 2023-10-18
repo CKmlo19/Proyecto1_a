@@ -16,11 +16,9 @@ public enum TipoZombie {
     CHOQUE("Zombie de Choque", "ruta_del_zombie_choque.gif");
 
     private final String nombre;
-    private final String rutaGif;
 
     private TipoZombie(String nombre, String rutaImagen) {
         this.nombre = nombre;
-        this.rutaGif = rutaImagen;
     }
 
     public static TipoZombie getAEREO() {
@@ -42,11 +40,6 @@ public enum TipoZombie {
     public String getNombre() {
         return nombre;
     }
-
-    public String getRutaGif() {
-        return rutaGif;
-    }
-       
    
 }
 

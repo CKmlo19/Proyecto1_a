@@ -36,8 +36,6 @@ public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int ca
     this.tipo = tipo;
     this.rango = tipo.equals("MEDIANO_ALCANCE") ? 2 : 1;
     this.daño = daño;
-    this.posicion_x = posicion_x;
-    this.posicion_y = posicion_y;
     this.rutaGif = rutaImagen;
 }
     public Personaje() {

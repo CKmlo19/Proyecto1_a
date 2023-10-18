@@ -4,18 +4,6 @@
  */
 package ejercicio.proyecto1;
 
-import java.awt.Color;
-import javax.swing.JPanel;
-
-/**
- *
- * @author luisc
- */
-
-// clase que hereda de personaje
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
 
 public class Zombie extends Personaje {
     private TipoZombie tipoZombie;

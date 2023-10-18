@@ -55,7 +55,6 @@ public class Ventana extends javax.swing.JFrame {
         lblSeleccion_Defensa.setVisible(enable);
         pnlDefensas.setLayout(new java.awt.GridLayout());
         crearTablero(); // funcion que crea el tablero
-        cargarPersonajes();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -255,8 +254,8 @@ public class Ventana extends javax.swing.JFrame {
                     try{
                         File archivoSeleccionado = fileChooser.getSelectedFile();
                        // personajes = (ArrayList<Personaje>)FileManager.readObject(archivoSeleccionado.getAbsolutePath());
-                        personajes = (ArrayList<Personaje>)FileManager.readObject("nuevopath.dat");
-                        cargarPersonajes();
+                        //personajes = (ArrayList<Personaje>)FileManager.readObject("nuevopath.dat");
+                        FileManager.readFile(archivoSeleccionado.getAbsolutePath());
 
                     }
                     catch(Exception e){
@@ -528,6 +527,23 @@ public void moverZombieHaciaDefensa(Personaje zombie, Defensa defensa) {
     if (esUbicacionValida(tablero, nuevaFila, nuevaColumna) && verificarCasilla(nuevaFila, nuevaColumna)) {
         moverPersonaje(zombie, nuevaFila, nuevaColumna); // Movemos el zombie a la nueva ubicación
     }
+}
+
+private void cargarTexto(String texto_completo){
+   String str = "";
+   int contador = 0;
+   
+   // Los atributos de cada personaje
+   String tipoEspecial;
+   String Nombre;
+   
+   
+    for (int i = 0; i < texto_completo.length(); i++) {
+        if(texto_completo.charAt(i) == ','){
+            
+        }
+    }
+
 }
 
 private void cargarPersonajes(){

@@ -569,10 +569,10 @@ private boolean nivelGanado() {
     for (ThreadPersonaje defensaThread : defensas) {
         Defensa defensa = (Defensa) defensaThread.getPersonaje();
         if (defensa.getVida() > 0) {
-            return false; // Si al menos una defensa está viva, retorna falso
+            return false; //Si al menos una defensa está viva, retorna falso
         }
     }
-    return true; // Todas las defensas están muertas
+    return true; //Todas las defensas están muertas
 }
 
 
@@ -580,10 +580,10 @@ private boolean nivelPerdido() {
     for (ThreadPersonaje zombieThread : zombies) {
         Personaje zombie = zombieThread.getPersonaje();
         if (zombie.getVida() > 0) {
-            return false; // Si al menos un zombie está vivo, retorna falso
+            return false; //Si al menos un zombie está vivo, retorna falso
         }
     }
-    return true; // Todos los zombies están muertos
+    return true; //Todos los zombies están muertos
 }
 
 public void avanzarNivel(Personaje personajeActual) {

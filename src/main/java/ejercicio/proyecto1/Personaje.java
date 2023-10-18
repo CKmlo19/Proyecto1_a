@@ -23,9 +23,10 @@ public abstract class Personaje {
    private int daño;
    private int posicion_x;
    private int posicion_y;
-   private JLabel label;
+   private  String rutaGif;
 
-public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño) {
+
+public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño, String rutaImagen) {
     this.Nombre = Nombre;
     this.vida = vida;
     this.cantidad_golpes = cantidad_golpes;
@@ -37,6 +38,7 @@ public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int ca
     this.daño = daño;
     this.posicion_x = posicion_x;
     this.posicion_y = posicion_y;
+    this.rutaGif = rutaImagen;
 }
     public Personaje() {
        
@@ -54,7 +56,6 @@ public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int ca
         oponente.vida -= dañoTotal;
         int vida1 = oponente.vida;
         String vida = Integer.toString(vida1);
-        oponente.getLabel().setText(vida);
         if (oponente.vida <= 0) {
             oponente.morir();
         }
@@ -153,14 +154,6 @@ private void AtaqueAZombieAereo(Personaje zombie, TipoZombie tipoZombie, TipoDef
         return daño;
     }
 
-    public JLabel getLabel() {
-        return label;
-    }
-
-    public void setLabel(JLabel label) {
-        this.label = label;
-    }
-
     public int getGolpes() {
         return golpes;
     }
@@ -184,7 +177,9 @@ private void AtaqueAZombieAereo(Personaje zombie, TipoZombie tipoZombie, TipoDef
     public void setPosicion_y(int posicion_y) {
         this.posicion_y = posicion_y;
     }
-    
-    
+
+    public Personaje(String rutaGif) {
+        this.rutaGif = rutaGif;
+    }
     
 }

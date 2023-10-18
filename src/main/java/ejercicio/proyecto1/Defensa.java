@@ -18,7 +18,7 @@ public class Defensa extends Personaje{
     private JLabel label;
 
     public Defensa(TipoDefensa tipoDefensa, String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño) {
-        super(Nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño);
+        super(Nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, null);
         this.tipoDefensa = tipoDefensa;
         label = new JLabel("100");
         label.setBackground(Color.ORANGE);
@@ -26,7 +26,6 @@ public class Defensa extends Personaje{
         label.setOpaque(true);
         label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        this.setLabel(label);
     }
     
     

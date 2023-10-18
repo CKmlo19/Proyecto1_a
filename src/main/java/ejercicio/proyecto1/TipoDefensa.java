@@ -14,7 +14,8 @@ public enum TipoDefensa {
     MEDIANO_ALCANCE("Defensa de Mediano Alcance"),
     IMPACTO("Defensa de Impacto"),
     ATAQUE_MULTIPLE ("Defensa de Ataque Múltiple"),
-    BLOQUES ("Defensa de Bloque");
+    BLOQUES ("Defensa de Bloque"),
+    RELIQUIA("Reliquia");
     
     private final String tipo_especifico;
 

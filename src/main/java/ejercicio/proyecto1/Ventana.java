@@ -55,8 +55,7 @@ public class Ventana extends javax.swing.JFrame {
         lblSeleccion_Defensa.setVisible(enable);
         pnlDefensas.setLayout(new java.awt.GridLayout());
         crearTablero(); // funcion que crea el tablero
-        cargarPersonajes();
-    }
+                }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -255,8 +254,9 @@ public class Ventana extends javax.swing.JFrame {
                     try{
                         File archivoSeleccionado = fileChooser.getSelectedFile();
                        // personajes = (ArrayList<Personaje>)FileManager.readObject(archivoSeleccionado.getAbsolutePath());
-                        personajes = (ArrayList<Personaje>)FileManager.readObject("nuevopath.dat");
-                        cargarPersonajes();
+                        String value = (String)FileManager.readFile(archivoSeleccionado.getAbsolutePath());
+                        //cargarPersonajes();
+                        cargarPersonajes(value);
 
                     }
                     catch(Exception e){
@@ -530,23 +530,123 @@ public void moverZombieHaciaDefensa(Personaje zombie, Defensa defensa) {
     }
 }
 
-private void cargarPersonajes(){
-    for (int i = 0; i < personajes.size(); i++) {
-        if(personajes.get(i).getTipo().equals("ZOMBIE")){
-            System.out.println("LLego aqui??");
-            generarZombies((Zombie)personajes.get(i));
-        }
-        else{
-            System.out.println("LLego aqui siiiiii??");
-            generarDefensasContenedor((Defensa)personajes.get(i));
+private void crearPersonaje(String TipoEspecial, String nombre,int vida,int cantidad_golpes,int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño, String rutaImagen){
+
+    if(tipo.equals("ZOMBIE")){
+    TipoZombie tipoespecial = cargarTipoZombie(TipoEspecial);
+    Zombie z1 = new Zombie(tipoespecial, nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, rutaImagen);
+    setAparicion(z1);
+            
+            // Crear el thread
+            ThreadPersonaje tp =  new ThreadPersonaje(z1, this);
+            zombies.add(tp);
+            cantidad_zombies++;
+    }
+    
+}
+
+private void cargarPersonajes(String valor){
+    String str = "";
+    int contador = 0;
+    
+    String TipoEspecial;
+    String nombre;
+    int vida;
+    int cantidad_golpes;
+    int nivel;
+    int campos;
+    int nivel_aparicion;
+    String tipo;
+    int rango;
+    int daño;
+    String rutaImagen;
+    
+    
+    for (int i = 0; i < valor.length(); i++) {
+        if((valor.charAt(i) == ',') &&(contador == 0)){
+            TipoEspecial = str;
+            str = "";
+            contador++;
+            
+        
+        } else if(contador >= 10){
+            contador = 0;
+            str = "";
+            crearPersonaje(TipoEspecial, nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, rutaImagen);
         
         }
+        
+        else if((valor.charAt(i) == ',') &&(contador == 1)){
+            nombre = str;
+            str = "";
+            contador++;
+        
+        }
+        else if((valor.charAt(i) == ',') &&(contador == 2)){
+            vida = Integer.parseInt(str);
+            str = "";
+            contador++;
+        
+        }else if((valor.charAt(i) == ',') &&(contador == 3)){
+            cantidad_golpes = Integer.parseInt(str);
+            str = "";
+            contador++;
+        
+        }
+        else if((valor.charAt(i) == ',') &&(contador == 4)){
+            nivel = Integer.parseInt(str);
+            str = "";
+            contador++;
+        
+        }
+        else if((valor.charAt(i) == ',') &&(contador == 5)){
+            campos = Integer.parseInt(str);
+            str = "";
+            contador++;
+        
+        }
+        else if((valor.charAt(i) == ',') &&(contador == 6)){
+             nivel_aparicion = Integer.parseInt(str);
+            str = "";
+            contador++;
+        
+        }
+        else if((valor.charAt(i) == ',') &&(contador == 7)){
+             tipo = str;
+            str = "";
+            contador++;
+        
+        }else if((valor.charAt(i) == ',') &&(contador == 8)){
+            rango = Integer.parseInt(str);
+            str = "";
+            contador++;
+        
+        }else if((valor.charAt(i) == ',') &&(contador == 9)){
+            daño = Integer.parseInt(str);
+            str = "";
+            contador++;
+        
+        }else if((valor.charAt(i) == ',') &&(contador == 10)){
+            rutaImagen = str;
+            str = "";
+            contador++;
+        
+        }
+        
+        else{
+            str+=valor.charAt(i);
+        }
+    
     }
+    
+    
 
 }
 
-private TipoZombie cargarTipoZombie(Zombie zombie){
-    String zombie_nombre = zombie.getNombre();
+
+
+
+private TipoZombie cargarTipoZombie(String zombie_nombre){
     switch (zombie_nombre) {
             case "Zombie Aéreo":
                 return TipoZombie.AEREO;

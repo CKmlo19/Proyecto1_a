@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.Queue;
 import java.util.LinkedList;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -28,6 +30,7 @@ import java.util.LinkedList;
  * @author luisc
  */
 public class Ventana extends javax.swing.JFrame {
+   private ArrayList<Personaje> personajes;
    private ArrayList<ThreadPersonaje> zombies;
    private ArrayList<ThreadPersonaje> defensas;
    private Personaje[][] matriz_personaje;
@@ -46,13 +49,13 @@ public class Ventana extends javax.swing.JFrame {
         zombies = new ArrayList<ThreadPersonaje>();
         defensas = new ArrayList<ThreadPersonaje>();
         tablero = new JPanel[25][25];
+        personajes = (ArrayList<Personaje>)FileManager.readObject("nuevopath.dat");
         matriz_personaje = new Personaje[25][25];
         initComponents();
         lblSeleccion_Defensa.setVisible(enable);
         pnlDefensas.setLayout(new java.awt.GridLayout());
         crearTablero(); // funcion que crea el tablero
-        generarZombies(2);
-        generarDefensasContenedor(7);
+        cargarPersonajes();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,10 +72,8 @@ public class Ventana extends javax.swing.JFrame {
         btnDetener = new javax.swing.JButton();
         pnlDefensas = new javax.swing.JPanel();
         lblSeleccion_Defensa = new javax.swing.JLabel();
-        lblBorrarDefensa = new javax.swing.JLabel();
-        tbnBorrarDefensa = new javax.swing.JToggleButton();
         lblEspaciosEjercito = new javax.swing.JLabel();
-        btnAgregarImagen = new javax.swing.JButton();
+        btnCargar = new javax.swing.JButton();
 
         jPanel5.setBackground(new java.awt.Color(255, 51, 51));
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -123,30 +124,19 @@ public class Ventana extends javax.swing.JFrame {
         lblSeleccion_Defensa.setEnabled(false);
         lblSeleccion_Defensa.setOpaque(true);
 
-        lblBorrarDefensa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblBorrarDefensa.setForeground(new java.awt.Color(255, 51, 0));
-        lblBorrarDefensa.setText("Selecciona una defensa para borrar");
-
-        tbnBorrarDefensa.setText("BorrarDefensa");
-        tbnBorrarDefensa.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbnBorrarDefensaMouseClicked(evt);
-            }
-        });
-
         lblEspaciosEjercito.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblEspaciosEjercito.setForeground(new java.awt.Color(0, 0, 0));
         lblEspaciosEjercito.setText("Espacios ejercito: ");
 
-        btnAgregarImagen.setText("Agregar Imagen");
-        btnAgregarImagen.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnCargar.setText("Cargar Personajes");
+        btnCargar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnAgregarImagenMouseClicked(evt);
+                btnCargarMouseClicked(evt);
             }
         });
-        btnAgregarImagen.addActionListener(new java.awt.event.ActionListener() {
+        btnCargar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarImagenActionPerformed(evt);
+                btnCargarActionPerformed(evt);
             }
         });
 
@@ -155,66 +145,52 @@ public class Ventana extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(103, 103, 103)
-                        .addComponent(btnInicio)
-                        .addGap(112, 112, 112)
-                        .addComponent(tbnBorrarDefensa))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(270, Short.MAX_VALUE)
-                        .addComponent(lblBorrarDefensa, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(69, 69, 69)
+                .addGap(133, 133, 133)
+                .addComponent(btnInicio)
+                .addGap(120, 120, 120)
                 .addComponent(pnlDefensas, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(116, 116, 116)
+                        .addComponent(btnCargar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnDetener))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(lblSeleccion_Defensa)))
-                .addGap(83, 83, 83))
+                        .addComponent(lblSeleccion_Defensa)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(203, 203, 203))
             .addGroup(layout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlPanelJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 881, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(108, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblEspaciosEjercito)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAgregarImagen)
-                        .addGap(280, 280, 280))))
+                        .addGap(280, 850, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnInicio)
-                            .addComponent(tbnBorrarDefensa))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblBorrarDefensa, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(12, Short.MAX_VALUE)
-                                .addComponent(pnlDefensas, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(26, 26, 26)
-                                .addComponent(lblSeleccion_Defensa)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnDetener)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addContainerGap(12, Short.MAX_VALUE)
+                        .addComponent(pnlDefensas, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(btnInicio))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(lblSeleccion_Defensa)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnDetener)
+                            .addComponent(btnCargar))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlPanelJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblEspaciosEjercito)
-                    .addComponent(btnAgregarImagen))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addComponent(lblEspaciosEjercito)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -247,7 +223,7 @@ public class Ventana extends javax.swing.JFrame {
                 get.pausar();
             }
             for (int i = 0; i < defensas.size(); i++) {
-                ThreadPersonaje get = zombies.get(i);
+                ThreadPersonaje get = defensas.get(i);
                 get.pausar();
             }
         btnDetener.setText("Reanudar");
@@ -265,28 +241,31 @@ public class Ventana extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDetenerActionPerformed
 
-    private void tbnBorrarDefensaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbnBorrarDefensaMouseClicked
+    private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
         // TODO add your handling code here:
-        
-        
-    }//GEN-LAST:event_tbnBorrarDefensaMouseClicked
+    }//GEN-LAST:event_btnCargarActionPerformed
 
-    private void btnAgregarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarImagenActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarImagenActionPerformed
-
-    private void btnAgregarImagenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarImagenMouseClicked
+    private void btnCargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCargarMouseClicked
         JFileChooser fileChooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos GIF", "gif");
-                fileChooser.setFileFilter(filter);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos DAT", "dat");
+        fileChooser.setFileFilter(filter);
 
                 int resultado = fileChooser.showOpenDialog(this);
                 if (resultado == JFileChooser.APPROVE_OPTION) {
-                    Zombie z1 = (Zombie)zombies.get(0).getPersonaje();
-                    File archivoSeleccionado = fileChooser.getSelectedFile();
-                    ImageIcon imagen = new ImageIcon(archivoSeleccionado.getAbsolutePath());
+                    try{
+                        File archivoSeleccionado = fileChooser.getSelectedFile();
+                       // personajes = (ArrayList<Personaje>)FileManager.readObject(archivoSeleccionado.getAbsolutePath());
+                        personajes = (ArrayList<Personaje>)FileManager.readObject("nuevopath.dat");
+                        cargarPersonajes();
+
+                    }
+                    catch(Exception e){
+                        JOptionPane.showMessageDialog(this, "Error, no se ha cargado los personajes");
+                        
+                    }
+                    
                 }
-    }//GEN-LAST:event_btnAgregarImagenMouseClicked
+    }//GEN-LAST:event_btnCargarMouseClicked
  
     /**
      * @param args the command line arguments
@@ -349,6 +328,7 @@ public class Ventana extends javax.swing.JFrame {
           JPanel casilla_tablero = getJPanelTablero(fila, columna);
           personaje.setPosicion_x(fila); personaje.setPosicion_y(columna);
           matriz_personaje[fila][columna] = personaje;
+          casilla_tablero.add(personaje.getLabel());
     }
    
     // Funcion que mueve personajes
@@ -380,22 +360,21 @@ public void moverDefensaAereo(Defensa defensa) {
     }
 }
 
-    private void generarZombies(int size){
-        
-        for (int i = 0; i < size; i++) {
+    private void generarZombies(Zombie zombie){
+            
+            TipoZombie tipo = cargarTipoZombie(zombie);
             
             // crear el zombie aleatoriamente, del tipo que corresponda
-            Zombie zombie = new Zombie(TipoZombie.CONTACTO, "Zombie1", 100, 1, 1, 1, 1, "ZOMBIE", 1, 1);
+            Zombie z1 = new Zombie(tipo, zombie.getNombre(), zombie.getVida(), zombie.getCantidad_golpes(), zombie.getNivel(), zombie.getCampos(), zombie.getNivel_aparicion(), zombie.getTipo(), zombie.getRango(), zombie.getDaño(), zombie.getRutaImagen());
             
             // agrega el zombie solo en la ultima casilla exterior (0,0) hasta (0, 24) y (24,0) hasta la (24,24)
-            setAparicion(zombie);
+            setAparicion(z1);
             
             // Crear el thread
-            ThreadPersonaje tp =  new ThreadPersonaje(zombie, this);
+            ThreadPersonaje tp =  new ThreadPersonaje(z1, this);
             zombies.add(tp);
             cantidad_zombies++;
-             
-        }
+
         
     }
     
@@ -411,8 +390,10 @@ public void moverDefensaAereo(Defensa defensa) {
     
     public void addDefensa(Defensa defensa, int fila, int columna){
        // funcion que añade la defensa en el tablero
+       TipoDefensa tipo = cargarTipoDefensa(defensa);
+       
         Defensa def2 = new 
-        Defensa(TipoDefensa.BLOQUES, defensa.getNombre(), defensa.getVida(), defensa.getCantidad_golpes(), defensa.getNivel(), defensa.getCampos(), defensa.getNivel_aparicion(), defensa.getTipo(), defensa.getRango(), defensa.getDaño());
+        Defensa(tipo.BLOQUES, defensa.getNombre(), defensa.getVida(), defensa.getCantidad_golpes(), defensa.getNivel(), defensa.getCampos(), defensa.getNivel_aparicion(), defensa.getTipo(), defensa.getRango(), defensa.getDaño(), defensa.getRutaImagen());
         def2.setPosicion_x(fila);
         def2.setPosicion_y(columna);
         
@@ -424,11 +405,12 @@ public void moverDefensaAereo(Defensa defensa) {
         pnlPanelJuego.repaint();
     }
     
-    public void generarDefensasContenedor(int size){
-        for (int i = 0; i < size; i++) {
-            Defensa defensa = new Defensa(TipoDefensa.BLOQUES, "THE WALL", 100, 1, 1, 1, 1, "DEFENSA", 1, 1);
-            cantidad_defensas++;
-        }
+    public void generarDefensasContenedor(Defensa defensa){
+        TipoDefensa tipo = cargarTipoDefensa(defensa);
+        defensa = new Defensa(tipo, defensa.getNombre(), defensa.getVida(), defensa.getCantidad_golpes(), defensa.getNivel(), defensa.getCampos(), defensa.getNivel_aparicion(), defensa.getTipo(), defensa.getRango(), defensa.getDaño(), defensa.getRutaImagen());
+        defensa.getLabel().addMouseListener(new Listener_Defensas(this, defensa));
+        cantidad_defensas++;
+        pnlDefensas.add(defensa.getLabel());
     }
     
     public void setAparicion(Personaje zombie){
@@ -548,7 +530,58 @@ public void moverZombieHaciaDefensa(Personaje zombie, Defensa defensa) {
     }
 }
 
+private void cargarPersonajes(){
+    for (int i = 0; i < personajes.size(); i++) {
+        if(personajes.get(i).getTipo().equals("ZOMBIE")){
+            System.out.println("LLego aqui??");
+            generarZombies((Zombie)personajes.get(i));
+        }
+        else{
+            System.out.println("LLego aqui siiiiii??");
+            generarDefensasContenedor((Defensa)personajes.get(i));
+        
+        }
+    }
 
+}
+
+private TipoZombie cargarTipoZombie(Zombie zombie){
+    String zombie_nombre = zombie.getNombre();
+    switch (zombie_nombre) {
+            case "Zombie Aéreo":
+                return TipoZombie.AEREO;
+            case "Zombie de Contacto":
+                return TipoZombie.CONTACTO;
+            case "Zombie de Mediano Alcance":
+                return TipoZombie.MEDIANO_ALCANCE;
+            case "Zombie de Choque":
+                return TipoZombie.CHOQUE;
+                }
+    return null;
+    
+}
+
+
+private TipoDefensa cargarTipoDefensa(Defensa defensa){
+    String defensa_nombre = defensa.getNombre();
+    switch (defensa_nombre) {
+            case "Defensa Aérea":
+                return TipoDefensa.AEREO;
+            case "Defensa de Contacto":
+                return TipoDefensa.CONTACTO;
+            case "Defensa de Mediano Alcance":
+                return TipoDefensa.MEDIANO_ALCANCE;
+            case "Defensa de Impacto":
+                return TipoDefensa.IMPACTO;
+            case "Defensa de Ataque Múltiple":
+                return TipoDefensa.ATAQUE_MULTIPLE;
+            case "Defensa de Bloque":
+                return TipoDefensa.BLOQUES;
+                
+    }
+    return null;
+    
+}
 
 
 // Funcion que determina si la ubicacion es valida para el personaje de la matriz
@@ -564,6 +597,53 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
     personaje.pelear(enemigo);
    
 }
+
+
+private boolean nivelGanado() {
+    for (ThreadPersonaje defensaThread : defensas) {
+        Defensa defensa = (Defensa) defensaThread.getPersonaje();
+        if (defensa.getVida() > 0) {
+            return false; //Si al menos una defensa está viva, retorna falso
+        }
+    }
+    return true; //Todas las defensas están muertas
+}
+
+
+private boolean nivelPerdido() {
+    for (ThreadPersonaje zombieThread : zombies) {
+        Personaje zombie = zombieThread.getPersonaje();
+        if (zombie.getVida() > 0) {
+            return false; //Si al menos un zombie está vivo, retorna falso
+        }
+    }
+    return true; //Todos los zombies están muertos
+}
+
+public void avanzarNivel(Personaje personajeActual) {
+    // Verifica si se ha ganado el juego (todas las defensas muertas)
+    if (nivelGanado()) {
+        System.out.println("¡Has ganado el nivel!");
+    } else if (nivelPerdido()) {
+        System.out.println("¡Has perdido el nivel!");
+    } else {
+        System.out.println("Has avanzado al nivel " + (personajeActual.getNivel() + 1));
+        int nivelActual = personajeActual.getNivel();
+        personajeActual.setNivel(nivelActual + 1);
+        aumentarStatsPorNivel(personajeActual);
+    }
+}
+
+public void aumentarStatsPorNivel(Personaje personaje) {
+    int incrementoVida = (int) (Math.random() * 16 + 5); //Valor aleatorio entre 5 y 20
+    int incrementoDaño = (int) (Math.random() * 16 + 5); 
+    
+    personaje.setVida(personaje.getVida() + incrementoVida);
+    personaje.setDaño(personaje.getDaño() + incrementoDaño);
+
+    System.out.println("Nivel " + personaje.getNivel() + ": Se han aumentado las estadísticas de los personajes.");
+}
+
      // getters and setters
 
     public JPanel getPnlDefensas() {
@@ -605,16 +685,14 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregarImagen;
+    private javax.swing.JButton btnCargar;
     private javax.swing.JButton btnDetener;
     private javax.swing.JButton btnInicio;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JLabel lblBorrarDefensa;
     private javax.swing.JLabel lblEspaciosEjercito;
     private javax.swing.JLabel lblSeleccion_Defensa;
     private javax.swing.JPanel pnlDefensas;
     private javax.swing.JPanel pnlPanelJuego;
-    private javax.swing.JToggleButton tbnBorrarDefensa;
     // End of variables declaration//GEN-END:variables
 }
 

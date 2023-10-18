@@ -10,15 +10,15 @@ package ejercicio.proyecto1;
  */
 public enum TipoZombie {
     
-    AEREO("Zombie Aéreo", "/ejercicio/proyecto1/zombie.gif"),
-    CONTACTO("Zombie de Contacto", "/ejercicio/proyecto1/zombie.gif"),
-    MEDIANO_ALCANCE("Zombie de Mediano Alcance", "ruta_del_zombie_mediano_alcance.gif"),
-    CHOQUE("Zombie de Choque", "ruta_del_zombie_choque.gif");
+    AEREO("Zombie Aéreo"),
+    CONTACTO("Zombie de Contacto"),
+    MEDIANO_ALCANCE("Zombie de Mediano Alcance"),
+    CHOQUE("Zombie de Choque");
 
-    private final String nombre;
+    private final String tipo_especifico;
 
-    private TipoZombie(String nombre, String rutaImagen) {
-        this.nombre = nombre;
+    private TipoZombie(String tipo_especifico) {
+        this.tipo_especifico = tipo_especifico;
     }
 
     public static TipoZombie getAEREO() {
@@ -37,8 +37,8 @@ public enum TipoZombie {
         return CHOQUE;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getTipoEspecifico() {
+        return tipo_especifico;
     }
    
 }

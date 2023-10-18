@@ -9,21 +9,21 @@ package ejercicio.proyecto1;
  * @author masis
  */
 public enum TipoDefensa {
-    AEREO("Defensa Aérea", "ruta_de_defensa_aerea.gif"),
-    CONTACTO("Defensa de Contacto", "ruta_de_defensa_de_contacto.gif"),
-    MEDIANO_ALCANCE("Defensa de Mediano Alcance", "ruta_de_defensa_de_mediano_alcance.gif"),
-    IMPACTO("Defensa de Impacto", "ruta_de_defensa_de_impacto.gif"),
-    ATAQUE_MULTIPLE ("Defensa de Ataque Múltiple","ruta_de_defensa_de_ataque_multiplo.gif"),
-    BLOQUES ("Defensa de Bloque", "ruta_de_defensa_de_bloque.gif");
+    AEREO("Defensa Aérea"),
+    CONTACTO("Defensa de Contacto"),
+    MEDIANO_ALCANCE("Defensa de Mediano Alcance"),
+    IMPACTO("Defensa de Impacto"),
+    ATAQUE_MULTIPLE ("Defensa de Ataque Múltiple"),
+    BLOQUES ("Defensa de Bloque");
     
-    private final String nombre;
+    private final String tipo_especifico;
 
-    private TipoDefensa(String nombre, String rutaImagen) {
-        this.nombre = nombre;
+    private TipoDefensa(String tipo_especifico) {
+        this.tipo_especifico = tipo_especifico;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getTipoEspecifico() {
+        return tipo_especifico;
     }
 
     public static TipoDefensa getAEREO() {

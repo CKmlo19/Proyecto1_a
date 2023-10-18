@@ -17,19 +17,13 @@ public enum TipoDefensa {
     BLOQUES ("Defensa de Bloque", "ruta_de_defensa_de_bloque.gif");
     
     private final String nombre;
-    private final String rutaImagen;
 
     private TipoDefensa(String nombre, String rutaImagen) {
         this.nombre = nombre;
-        this.rutaImagen = rutaImagen;
     }
 
     public String getNombre() {
         return nombre;
-    }
-
-    public String getRutaImagen() {
-        return rutaImagen;
     }
 
     public static TipoDefensa getAEREO() {

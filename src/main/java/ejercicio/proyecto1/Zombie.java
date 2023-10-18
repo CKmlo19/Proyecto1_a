@@ -22,7 +22,7 @@ public class Zombie extends Personaje {
     JLabel label;
 
     public Zombie(TipoZombie tipoZombie, String Nombre, int vida, int cantidad_golpes, int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño) {
-        super(Nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño);
+        super(Nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, null);
         this.tipoZombie = tipoZombie;
         
        
@@ -40,7 +40,6 @@ public class Zombie extends Personaje {
 //        catch(Exception e){
 //            System.out.println("La imagen no se ha encontrado");
 //        }
-        this.setLabel(label);
     }
    
     

@@ -4,6 +4,7 @@
  */
 package ejercicio.proyecto1;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.io.Serializable;
 import javax.swing.ImageIcon;
@@ -42,35 +43,42 @@ public class Personaje implements Serializable {
         this.daño = daño;
         this.rutaImagen = rutaImagen;
         
-        label = new JLabel();
-        ImageIcon imagen = new ImageIcon(rutaImagen);
-        Image imagenRedimensionada = imagen.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_REPLICATE);
-        label.setIcon(new ImageIcon(imagenRedimensionada));
+        label = new JLabel("" + vida);
+        //ImageIcon imagen = new ImageIcon(rutaImagen);
+       // Image imagenRedimensionada = imagen.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_REPLICATE);
+       // label.setIcon(imagen);
+        label.setVisible(true);
+        label.setBackground(Color.red);
+        label.setForeground(new java.awt.Color(255, 255, 255));
+        label.setFont(new java.awt.Font("Helvetica Neue", 0, 10)); // NOI18N
+        label.setForeground(new java.awt.Color(255, 255, 255));
+        label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label.setOpaque(true);
     }
     
-    public void morir() {
+    public void morir(Personaje oponente) {
         this.vida = 0;
         System.out.println("Te has muerto");
     }
     
-    public void pelear(Personaje oponente) {
+    public void pelear(Personaje oponente, Ventana ventana) {
         int dañoTotal = this.cantidad_golpes * this.daño;
         oponente.vida -= dañoTotal;
         int vida1 = oponente.vida;
         String vida = Integer.toString(vida1);
         if (oponente.vida <= 0) {
-            oponente.morir();
+            ventana.morirDeVerdad(oponente);
         }
     }
     
-    private void AtaqueAZombieAereo(Personaje zombie, TipoZombie tipoZombie, TipoDefensa tipoDefensa) {
-        
-        if (tipoZombie == TipoZombie.AEREO && tipoDefensa == TipoDefensa.AEREO) {
-            pelear(zombie);
-        } else {
-            System.out.println("Esta defensa no puede atacar a un Zombie Aéreo.");
-        }
-    }
+//    private void AtaqueAZombieAereo(Personaje zombie, TipoZombie tipoZombie, TipoDefensa tipoDefensa) {
+//        
+//        if (tipoZombie == TipoZombie.AEREO && tipoDefensa == TipoDefensa.AEREO) {
+//            pelear(zombie);
+//        } else {
+//            System.out.println("Esta defensa no puede atacar a un Zombie Aéreo.");
+//        }
+//    }
 
     // getters and setters
     @Override

@@ -28,6 +28,14 @@ public class Defensa extends Personaje{
         return "Defensa{" + "Nombre=" + getNombre() + ", tipo=" + tipoDefensa.getTipoEspecifico() + '}';
     }
 
+    public TipoDefensa getTipoDefensa() {
+        return tipoDefensa;
+    }
+
+    public void setTipoDefensa(TipoDefensa tipoDefensa) {
+        this.tipoDefensa = tipoDefensa;
+    }
+
 
 
 }

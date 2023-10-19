@@ -31,6 +31,16 @@ public class Zombie extends Personaje {
         return "Zombie{" + "Nombre=" + getNombre() + ", tipo=" + tipoZombie.getTipoEspecifico()+ '}';
     }
 
+    public TipoZombie getTipoZombie() {
+        return tipoZombie;
+    }
+
+    public void setTipoZombie(TipoZombie tipoZombie) {
+        this.tipoZombie = tipoZombie;
+    }
+
+    
+    
 }
     
     

@@ -60,6 +60,10 @@ public class ThreadPersonaje extends Thread{
         this.personaje = personaje;
     }
 
+    public void setIsRunning(boolean isRunning) {
+        this.isRunning = isRunning;
+    }
+
     
     
     

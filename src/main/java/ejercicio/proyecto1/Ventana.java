@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -30,7 +31,6 @@ import javax.swing.JOptionPane;
  * @author luisc
  */
 public class Ventana extends javax.swing.JFrame {
-   private ArrayList<Personaje> personajes;
    private ArrayList<ThreadPersonaje> zombies;
    private ArrayList<ThreadPersonaje> defensas;
    private Personaje[][] matriz_personaje;
@@ -49,13 +49,18 @@ public class Ventana extends javax.swing.JFrame {
         zombies = new ArrayList<ThreadPersonaje>();
         defensas = new ArrayList<ThreadPersonaje>();
         tablero = new JPanel[25][25];
-        personajes = (ArrayList<Personaje>)FileManager.readObject("nuevopath.dat");
+    //    personajes = (ArrayList<Personaje>)FileManager.readObject("nuevopath.dat");
         matriz_personaje = new Personaje[25][25];
         initComponents();
+        btnCargar.setVisible(false);
         lblSeleccion_Defensa.setVisible(enable);
         pnlDefensas.setLayout(new java.awt.GridLayout());
         crearTablero(); // funcion que crea el tablero
-                }
+        recargar();
+        
+        
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -115,7 +120,8 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
 
-        pnlDefensas.setBackground(new java.awt.Color(255, 255, 255));
+        pnlDefensas.setBackground(new java.awt.Color(255, 204, 51));
+        pnlDefensas.setBorder(new javax.swing.border.MatteBorder(null));
         pnlDefensas.setLayout(new javax.swing.BoxLayout(pnlDefensas, javax.swing.BoxLayout.LINE_AXIS));
 
         lblSeleccion_Defensa.setForeground(new java.awt.Color(0, 0, 0));
@@ -128,6 +134,7 @@ public class Ventana extends javax.swing.JFrame {
         lblEspaciosEjercito.setText("Espacios ejercito: ");
 
         btnCargar.setText("Cargar Personajes");
+        btnCargar.setEnabled(false);
         btnCargar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCargarMouseClicked(evt);
@@ -152,7 +159,7 @@ public class Ventana extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnCargar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                         .addComponent(btnDetener))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblSeleccion_Defensa)
@@ -161,12 +168,9 @@ public class Ventana extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnlPanelJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 881, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(108, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblEspaciosEjercito)
-                        .addGap(280, 850, Short.MAX_VALUE))))
+                    .addComponent(pnlPanelJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 881, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEspaciosEjercito))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,7 +250,7 @@ public class Ventana extends javax.swing.JFrame {
 
     private void btnCargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCargarMouseClicked
         JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos DAT", "dat");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos TXT", "txt");
         fileChooser.setFileFilter(filter);
 
                 int resultado = fileChooser.showOpenDialog(this);
@@ -255,11 +259,12 @@ public class Ventana extends javax.swing.JFrame {
                         File archivoSeleccionado = fileChooser.getSelectedFile();
                        // personajes = (ArrayList<Personaje>)FileManager.readObject(archivoSeleccionado.getAbsolutePath());
                         String value = (String)FileManager.readFile(archivoSeleccionado.getAbsolutePath());
+                        System.out.println(archivoSeleccionado.getAbsolutePath());
+                      //  System.out.println(value);
                         //cargarPersonajes();
                         cargarPersonajes(value);
-
                     }
-                    catch(Exception e){
+                    catch(IOException e){
                         JOptionPane.showMessageDialog(this, "Error, no se ha cargado los personajes");
                         
                     }
@@ -329,15 +334,12 @@ public class Ventana extends javax.swing.JFrame {
           personaje.setPosicion_x(fila); personaje.setPosicion_y(columna);
           matriz_personaje[fila][columna] = personaje;
           casilla_tablero.add(personaje.getLabel());
+          pnlDefensas.repaint();
+          pnlPanelJuego.repaint();
     }
    
     // Funcion que mueve personajes
     public void moverPersonaje(Personaje personaje, int x, int y){
-               if(matriz_personaje[x][y] == null){
-                    matriz_personaje[personaje.getPosicion_x()][personaje.getPosicion_y()] = null;
-                    addComponenteTablero(personaje, x, y);
-                    pnlPanelJuego.repaint();
-               }
         if(matriz_personaje[x][y] == null){
             matriz_personaje[personaje.getPosicion_x()][personaje.getPosicion_y()] = null;
             addComponenteTablero(personaje, x, y);
@@ -360,23 +362,6 @@ public void moverDefensaAereo(Defensa defensa) {
     }
 }
 
-    private void generarZombies(Zombie zombie){
-            
-            TipoZombie tipo = cargarTipoZombie(zombie);
-            
-            // crear el zombie aleatoriamente, del tipo que corresponda
-            Zombie z1 = new Zombie(tipo, zombie.getNombre(), zombie.getVida(), zombie.getCantidad_golpes(), zombie.getNivel(), zombie.getCampos(), zombie.getNivel_aparicion(), zombie.getTipo(), zombie.getRango(), zombie.getDaño(), zombie.getRutaImagen());
-            
-            // agrega el zombie solo en la ultima casilla exterior (0,0) hasta (0, 24) y (24,0) hasta la (24,24)
-            setAparicion(z1);
-            
-            // Crear el thread
-            ThreadPersonaje tp =  new ThreadPersonaje(z1, this);
-            zombies.add(tp);
-            cantidad_zombies++;
-
-        
-    }
     
     private boolean verificarCasilla(int x, int y){
     // funcion que verifica la casilla si contiene un elemento
@@ -388,14 +373,52 @@ public void moverDefensaAereo(Defensa defensa) {
             }
         }
     
+    
+    
+    public void recargar(){
+    JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos TXT", "txt");
+        fileChooser.setFileFilter(filter);
+
+                int resultado = fileChooser.showOpenDialog(this);
+                if (resultado == JFileChooser.APPROVE_OPTION) {
+                    try{
+                        File archivoSeleccionado = fileChooser.getSelectedFile();
+                       // personajes = (ArrayList<Personaje>)FileManager.readObject(archivoSeleccionado.getAbsolutePath());
+                        String valor = (String)FileManager.readFile(archivoSeleccionado.getAbsolutePath());
+                        System.out.println(archivoSeleccionado.getAbsolutePath());
+                      //  System.out.println(value);
+                         cargarPersonajes(valor);
+                    }
+                    catch(IOException e){
+                        JOptionPane.showMessageDialog(this, "Error, no se ha cargado los personajes");
+                        
+                    }
+                    
+                }
+    
+    
+    
+    }
+    
     public void addDefensa(Defensa defensa, int fila, int columna){
        // funcion que añade la defensa en el tablero
-       TipoDefensa tipo = cargarTipoDefensa(defensa);
        
         Defensa def2 = new 
-        Defensa(tipo.BLOQUES, defensa.getNombre(), defensa.getVida(), defensa.getCantidad_golpes(), defensa.getNivel(), defensa.getCampos(), defensa.getNivel_aparicion(), defensa.getTipo(), defensa.getRango(), defensa.getDaño(), defensa.getRutaImagen());
+        Defensa(defensa.getTipoDefensa(), defensa.getNombre(), defensa.getVida(), defensa.getCantidad_golpes(), defensa.getNivel(), defensa.getCampos(), defensa.getNivel_aparicion(), defensa.getTipo(), defensa.getRango(), defensa.getDaño(), defensa.getRutaImagen());
         def2.setPosicion_x(fila);
         def2.setPosicion_y(columna);
+        
+        JLabel label = new JLabel("" + defensa.getVida());
+        label.setVisible(true);
+        label.setBackground(Color.red);
+        label.setForeground(new java.awt.Color(255, 255, 255));
+        label.setFont(new java.awt.Font("Helvetica Neue", 0, 10)); // NOI18N
+        label.setForeground(new java.awt.Color(255, 255, 255));
+        label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label.setOpaque(true);
+        
+        defensa.setLabel(label);
         
         // Crear el thread
         ThreadPersonaje tp =  new ThreadPersonaje(def2, this);
@@ -405,13 +428,6 @@ public void moverDefensaAereo(Defensa defensa) {
         pnlPanelJuego.repaint();
     }
     
-    public void generarDefensasContenedor(Defensa defensa){
-        TipoDefensa tipo = cargarTipoDefensa(defensa);
-        defensa = new Defensa(tipo, defensa.getNombre(), defensa.getVida(), defensa.getCantidad_golpes(), defensa.getNivel(), defensa.getCampos(), defensa.getNivel_aparicion(), defensa.getTipo(), defensa.getRango(), defensa.getDaño(), defensa.getRutaImagen());
-        defensa.getLabel().addMouseListener(new Listener_Defensas(this, defensa));
-        cantidad_defensas++;
-        pnlDefensas.add(defensa.getLabel());
-    }
     
     public void setAparicion(Personaje zombie){
         // variables que sustituyen para spawnear en los bordes
@@ -438,14 +454,25 @@ public void moverDefensaAereo(Defensa defensa) {
                 }
             }
     }
-        
+// funcion que hace que se muera de verdad
+ public void morirDeVerdad(Personaje personaje){
+     personaje.morir(personaje);
+     matriz_personaje[personaje.getPosicion_x()][personaje.getPosicion_y()] = null;
+     tablero[personaje.getPosicion_x()][personaje.getPosicion_y()].removeAll();
+     if(personaje.getTipo().equals("ZOMBIE")){
+         cantidad_zombies--;
+     }
+     else{
+         cantidad_defensas--;
+     
+     }
+ }
     
 // verifica si hay algun zombie en el rango de dicha defensa
 public void verificarRangoAdyacentes(Personaje personaje){
         boolean hasAttacked = false;
         int fila = personaje.getPosicion_x();
         int columna = personaje.getPosicion_y();
-        System.out.println("Elemento en: ("+ fila + ", " + columna + ")");
         
         
         int rango = personaje.getRango();  // Especifica el rango alrededor de la ubicación actual
@@ -463,10 +490,7 @@ public void verificarRangoAdyacentes(Personaje personaje){
                         atacarPersonaje(personaje, filaAdyacente, columnaAdyacente); // ataca al enemigo
                         hasAttacked = true;
                         break externo;  
-                    }
-                    JPanel elementoAdyacente = tablero[filaAdyacente][columnaAdyacente];
-                    System.out.println("Elemento en [" + filaAdyacente + "][" + columnaAdyacente + "]: " + elementoAdyacente);
-                    
+                    }              
                 }
                 else{
                     hasAttacked = false;
@@ -480,6 +504,18 @@ public void verificarRangoAdyacentes(Personaje personaje){
             moverZombieHaciaDefensa(personaje, defensaCercana);
         }
     }
+ 
+ if(nivelGanado() || nivelPerdido()){
+    
+    if(nivelGanado()){
+        System.out.println("Haz ganado");
+    }
+    else{
+    
+        System.out.println("Haz perdido");
+    }
+ 
+ }
 }
 
 public Defensa encontrarDefensaCercana(int filaZombie, int columnaZombie) {
@@ -533,14 +569,24 @@ public void moverZombieHaciaDefensa(Personaje zombie, Defensa defensa) {
 private void crearPersonaje(String TipoEspecial, String nombre,int vida,int cantidad_golpes,int nivel, int campos, int nivel_aparicion, String tipo, int rango, int daño, String rutaImagen){
 
     if(tipo.equals("ZOMBIE")){
-    TipoZombie tipoespecial = cargarTipoZombie(TipoEspecial);
-    Zombie z1 = new Zombie(tipoespecial, nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, rutaImagen);
-    setAparicion(z1);
-            
+        TipoZombie tipoespecial = cargarTipoZombie(TipoEspecial);
+        Zombie z1 = new Zombie(tipoespecial, nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, rutaImagen);
+        setAparicion(z1);
+        
             // Crear el thread
             ThreadPersonaje tp =  new ThreadPersonaje(z1, this);
             zombies.add(tp);
             cantidad_zombies++;
+    }else{
+        TipoDefensa tipoespecial = cargarTipoDefensa(TipoEspecial);
+        Defensa defensa = new Defensa(tipoespecial, nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, rutaImagen);
+        JLabel label = defensa.getLabel();
+        label.setBackground(Color.BLUE);
+        defensa.setLabel(label);
+        defensa.getLabel().addMouseListener(new Listener_Defensas(this, defensa));
+        cantidad_defensas++;
+        pnlDefensas.add(defensa.getLabel());
+    
     }
     
 }
@@ -549,85 +595,97 @@ private void cargarPersonajes(String valor){
     String str = "";
     int contador = 0;
     
-    String TipoEspecial;
-    String nombre;
-    int vida;
-    int cantidad_golpes;
-    int nivel;
-    int campos;
-    int nivel_aparicion;
-    String tipo;
-    int rango;
-    int daño;
-    String rutaImagen;
+    String TipoEspecial = "";
+    String nombre = "";
+    int vida = 0;
+    int cantidad_golpes = 0;
+    int nivel = 0;
+    int campos = 0;
+    int nivel_aparicion = 0;
+    String tipo = "";
+    int rango = 0;
+    int daño = 0;
+    String rutaImagen = "";
     
     
     for (int i = 0; i < valor.length(); i++) {
-        if((valor.charAt(i) == ',') &&(contador == 0)){
-            TipoEspecial = str;
-            str = "";
-            contador++;
-            
         
-        } else if(contador >= 10){
+        if(contador >= 10 || valor.charAt(i) == '\n'){
             contador = 0;
             str = "";
             crearPersonaje(TipoEspecial, nombre, vida, cantidad_golpes, nivel, campos, nivel_aparicion, tipo, rango, daño, rutaImagen);
-        
+        }else if(valor.charAt(i) == '\\'){
+            str+= '\\';
+        }
+        else  if((valor.charAt(i) == ',') &&(contador == 0)){
+            TipoEspecial = str;
+            System.out.println(TipoEspecial);
+            str = "";
+            contador++;
         }
         
         else if((valor.charAt(i) == ',') &&(contador == 1)){
             nombre = str;
+             System.out.println(nombre);
             str = "";
             contador++;
         
         }
         else if((valor.charAt(i) == ',') &&(contador == 2)){
             vida = Integer.parseInt(str);
+            System.out.println(vida);
             str = "";
             contador++;
         
         }else if((valor.charAt(i) == ',') &&(contador == 3)){
             cantidad_golpes = Integer.parseInt(str);
+            System.out.println(cantidad_golpes);
             str = "";
             contador++;
         
         }
         else if((valor.charAt(i) == ',') &&(contador == 4)){
-            nivel = Integer.parseInt(str);
+            nivel = Integer.parseInt(str);System.out.println(nivel);
             str = "";
             contador++;
         
         }
         else if((valor.charAt(i) == ',') &&(contador == 5)){
             campos = Integer.parseInt(str);
+            System.out.println(campos);
             str = "";
             contador++;
         
         }
         else if((valor.charAt(i) == ',') &&(contador == 6)){
              nivel_aparicion = Integer.parseInt(str);
+             System.out.println(nivel_aparicion);
             str = "";
             contador++;
         
         }
         else if((valor.charAt(i) == ',') &&(contador == 7)){
              tipo = str;
+             System.out.println(tipo);
             str = "";
             contador++;
         
         }else if((valor.charAt(i) == ',') &&(contador == 8)){
             rango = Integer.parseInt(str);
+            System.out.println(rango);
             str = "";
             contador++;
         
         }else if((valor.charAt(i) == ',') &&(contador == 9)){
             daño = Integer.parseInt(str);
-            str = "";
+            System.out.println(daño);
+            str = "C";
             contador++;
-        
+            
+            
         }else if((valor.charAt(i) == ',') &&(contador == 10)){
             rutaImagen = str;
+            System.out.println(rutaImagen);
             str = "";
             contador++;
         
@@ -635,6 +693,7 @@ private void cargarPersonajes(String valor){
         
         else{
             str+=valor.charAt(i);
+            System.out.println(str);
         }
     
     }
@@ -642,9 +701,6 @@ private void cargarPersonajes(String valor){
     
 
 }
-
-
-
 
 private TipoZombie cargarTipoZombie(String zombie_nombre){
     switch (zombie_nombre) {
@@ -662,8 +718,7 @@ private TipoZombie cargarTipoZombie(String zombie_nombre){
 }
 
 
-private TipoDefensa cargarTipoDefensa(Defensa defensa){
-    String defensa_nombre = defensa.getNombre();
+private TipoDefensa cargarTipoDefensa(String defensa_nombre){
     switch (defensa_nombre) {
             case "Defensa Aérea":
                 return TipoDefensa.AEREO;
@@ -682,6 +737,8 @@ private TipoDefensa cargarTipoDefensa(Defensa defensa){
     return null;
     
 }
+    
+
 
 
 // Funcion que determina si la ubicacion es valida para el personaje de la matriz
@@ -694,38 +751,58 @@ public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna
 public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_enemigo){
     // si es una defensa buscar dentro del thread de zombies
     Personaje enemigo = matriz_personaje[fila_enemigo][columna_enemigo];
-    personaje.pelear(enemigo);
+    personaje.pelear(enemigo, this);
    
 }
 
 
 private boolean nivelGanado() {
-    for (ThreadPersonaje defensaThread : defensas) {
-        Defensa defensa = (Defensa) defensaThread.getPersonaje();
-        if (defensa.getVida() > 0) {
-            return false; //Si al menos una defensa está viva, retorna falso
-        }
+//    for (ThreadPersonaje defensaThread : defensas) {
+//        Defensa defensa = (Defensa) defensaThread.getPersonaje();
+//        if (defensa.getVida() > 0) {
+//            return false; //Si al menos una defensa está viva, retorna falso
+//        }
+//    }
+//    return true; //Todas las defensas están muertas
+    if(cantidad_zombies == 0){
+        return true;
     }
-    return true; //Todas las defensas están muertas
+    else
+        return false;
 }
 
 
 private boolean nivelPerdido() {
-    for (ThreadPersonaje zombieThread : zombies) {
-        Personaje zombie = zombieThread.getPersonaje();
-        if (zombie.getVida() > 0) {
-            return false; //Si al menos un zombie está vivo, retorna falso
-        }
+//    for (ThreadPersonaje zombieThread : zombies) {
+//        Personaje zombie = zombieThread.getPersonaje();
+//        if (zombie.getVida() > 0) {
+//            return false; //Si al menos un zombie está vivo, retorna falso
+//        }
+//    }
+//    return true; //Todos los zombies están muertos
+
+    if(cantidad_defensas == 0){
+        return true;
     }
-    return true; //Todos los zombies están muertos
+    else
+        return false;
 }
 
 public void avanzarNivel(Personaje personajeActual) {
-    // Verifica si se ha ganado el juego (todas las defensas muertas)
-    if (nivelGanado()) {
+    boolean nivelGanado = nivelGanado();
+    boolean nivelPerdido = nivelPerdido();
+
+    if (nivelGanado) {
         System.out.println("¡Has ganado el nivel!");
-    } else if (nivelPerdido()) {
+        reiniciarConNuevasStats(personajeActual);
+    } else if (nivelPerdido) {
         System.out.println("¡Has perdido el nivel!");
+        boolean reiniciar = PopupReinicio();
+        if (reiniciar) {
+            reiniciarNivel(personajeActual);
+        } else {
+            avanzarNivel(personajeActual);
+        }
     } else {
         System.out.println("Has avanzado al nivel " + (personajeActual.getNivel() + 1));
         int nivelActual = personajeActual.getNivel();
@@ -733,6 +810,36 @@ public void avanzarNivel(Personaje personajeActual) {
         aumentarStatsPorNivel(personajeActual);
     }
 }
+
+private void reiniciarVentana() {
+    //Reinicia el estado
+    pnlPanelJuego.removeAll();
+
+    //Reinicializa el tablero
+    crearTablero();
+
+
+    //Repinta el panel
+    pnlPanelJuego.revalidate();
+    pnlPanelJuego.repaint();
+}
+
+private void reiniciarConNuevasStats(Personaje personajeActual) {
+    personajeActual.setNivel(personajeActual.getNivel() + 1);
+    aumentarStatsPorNivel(personajeActual);
+    reiniciarVentana();
+}
+
+private boolean PopupReinicio() {
+    int choice = JOptionPane.showConfirmDialog(null, "¿Desea reiniciar el nivel?", "¡Has perdido!", JOptionPane.YES_NO_OPTION);
+    return choice == JOptionPane.YES_OPTION;
+}
+
+private void reiniciarNivel(Personaje personajeActual) {
+
+    reiniciarVentana();
+}
+
 
 public void aumentarStatsPorNivel(Personaje personaje) {
     int incrementoVida = (int) (Math.random() * 16 + 5); //Valor aleatorio entre 5 y 20

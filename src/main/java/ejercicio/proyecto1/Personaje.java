@@ -40,9 +40,7 @@ public Personaje(String Nombre, int vida, int cantidad_golpes, int nivel, int ca
 }
     public Personaje() {
        
-    }
-  
-    
+    }   
     
     public void morir(){
         this.vida = 0;
@@ -71,8 +69,6 @@ private void AtaqueAZombieAereo(Personaje zombie, TipoZombie tipoZombie, TipoDef
     }
 }
 
-    
-    
     
     // getters and setters
     

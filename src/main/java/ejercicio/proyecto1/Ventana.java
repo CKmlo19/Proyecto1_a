@@ -27,7 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Ventana extends javax.swing.JFrame {
    private ArrayList<ThreadPersonaje> zombies;
    private ArrayList<ThreadPersonaje> defensas;
-   private Personaje[][] matriz_personaje;
+   public Personaje[][] matriz_personaje;
    private Defensa defensa_seleccionada;
    private int ejercito = 20;
    private boolean enable = false;
@@ -443,6 +443,22 @@ public class Ventana extends javax.swing.JFrame {
                 }
             }
     }
+
+// Funcion que determina si la ubicacion es valida para el personaje de la matriz
+public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna) {
+        return fila >= 0 && fila < matriz.length && columna >= 0 && columna < matriz[0].length;
+    }
+
+
+// funcion que primero verifica cual personaje es para atacarlo
+public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_enemigo){
+    // si es una defensa buscar dentro del thread de zombies
+    Personaje enemigo = matriz_personaje[fila_enemigo][columna_enemigo];
+    personaje.pelear(enemigo);
+   
+}
+
+
 // verifica si hay algun zombie en el rango de dicha defensa
 public void verificarRangoAdyacentes(Personaje personaje){
         boolean hasAttacked = false;
@@ -476,31 +492,110 @@ public void verificarRangoAdyacentes(Personaje personaje){
                 }
             }
         }
-    if((hasAttacked == false) && (personaje.getTipo().equals("ZOMBIE"))){ // si no ha atacado entonces se mueve
-            int x = new Random().nextInt(25);
-            int y = new Random().nextInt(25);
-            moverPersonaje(personaje, x, y);
+ if (personaje.getTipo().equals("ZOMBIE") && !hasAttacked) {
+        Defensa defensaCercana = encontrarDefensaCercana(fila, columna);
+
+        if (defensaCercana != null) {
+            moverZombieHaciaDefensa(personaje, defensaCercana);
         }
-        
+    }
 }
 
-// Funcion que determina si la ubicacion es valida para el personaje de la matriz
-public static boolean esUbicacionValida(JPanel[][] matriz, int fila, int columna) {
-        return fila >= 0 && fila < matriz.length && columna >= 0 && columna < matriz[0].length;
+public Defensa encontrarDefensaCercana(int filaZombie, int columnaZombie) {
+    Defensa defensaCercana = null; //defensaCercana se inicializa en null
+    
+    //Garantiza que la primera distancia calculada siempre será menor que  distanciaMinima
+    double distanciaMinima = Double.MAX_VALUE; 
+    
+    //Bucle for para iterar a través de las defensas
+    for (ThreadPersonaje defensaThread : defensas) {
+        
+        Defensa defensa = (Defensa) defensaThread.getPersonaje(); //Obtenemos la defensa actual
+        int filaDefensa = defensa.getPosicion_x(); //Obtenemos la fila de la defensa
+        int columnaDefensa = defensa.getPosicion_y(); //Obtenemos la columna de la defensa
+
+        //Calculamos la distancia con el teorema de Pitágoras
+        //Se puede aplicar Pitágoras ya que el juego es en un plano cartesiano
+        double distancia = Math.sqrt(Math.pow(filaDefensa - filaZombie, 2) + Math.pow(columnaDefensa - columnaZombie, 2));
+
+        //Si la distancia calculada es menor que la distancia mínima registrada hasta ahora
+        if (distancia < distanciaMinima) {
+            distanciaMinima = distancia; //Actualizamos la distancia mínima
+            defensaCercana = defensa; //Actualizamos la referencia a la defensa más cercana
+        }
     }
 
+    //Se retorna la defensa más cercana encontrada
+    return defensaCercana;
+}
 
-// funcion que primero verifica cual personaje es para atacarlo
-public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_enemigo){
-    // si es una defensa buscar dentro del thread de zombies
-    Personaje enemigo = matriz_personaje[fila_enemigo][columna_enemigo];
-    personaje.pelear(enemigo);
-   
+public void moverZombieHaciaDefensa(Personaje zombie, Defensa defensa) {
+    int filaZombie = zombie.getPosicion_x(); //Obtenemos la fila actual del zombie
+    int columnaZombie = zombie.getPosicion_y(); //Obtenemos la columna actual del zombie
+    int filaDefensa = defensa.getPosicion_x(); //Obtenemos la fila de la defensa
+    int columnaDefensa = defensa.getPosicion_y(); //Obtenemos la columna de la defensa
+
+
+    int nuevoX = Integer.compare(filaDefensa - filaZombie, 0); //Diferencia en la fila
+    int nuevoY = Integer.compare(columnaDefensa - columnaZombie, 0); //Diferencia en la columna
+
+    //Calculamos las nuevas coordenadas para el zombie
+    int nuevaFila = filaZombie + nuevoX; //Nueva fila
+    int nuevaColumna = columnaZombie + nuevoY; //Nueva columna
+
+    //Verificamos si la nueva ubicación es válida en el tablero y si la casilla está disponible
+    if (esUbicacionValida(tablero, nuevaFila, nuevaColumna) && verificarCasilla(nuevaFila, nuevaColumna)) {
+        moverPersonaje(zombie, nuevaFila, nuevaColumna); // Movemos el zombie a la nueva ubicación
+    }
+  
 }
 
 
-  
-     
+private boolean nivelGanado() {
+    for (ThreadPersonaje defensaThread : defensas) {
+        Defensa defensa = (Defensa) defensaThread.getPersonaje();
+        if (defensa.getVida() > 0) {
+            return false; //Si al menos una defensa está viva, retorna falso
+        }
+    }
+    return true; //Todas las defensas están muertas
+}
+
+
+private boolean nivelPerdido() {
+    for (ThreadPersonaje zombieThread : zombies) {
+        Personaje zombie = zombieThread.getPersonaje();
+        if (zombie.getVida() > 0) {
+            return false; //Si al menos un zombie está vivo, retorna falso
+        }
+    }
+    return true; //Todos los zombies están muertos
+}
+
+public void avanzarNivel(Personaje personajeActual) {
+    // Verifica si se ha ganado el juego (todas las defensas muertas)
+    if (nivelGanado()) {
+        System.out.println("¡Has ganado el nivel!");
+    } else if (nivelPerdido()) {
+        System.out.println("¡Has perdido el nivel!");
+    } else {
+        System.out.println("Has avanzado al nivel " + (personajeActual.getNivel() + 1));
+        int nivelActual = personajeActual.getNivel();
+        personajeActual.setNivel(nivelActual + 1);
+        aumentarStatsPorNivel(personajeActual);
+    }
+}
+
+public void aumentarStatsPorNivel(Personaje personaje) {
+    int incrementoVida = (int) (Math.random() * 16 + 5); //Valor aleatorio entre 5 y 20
+    int incrementoDaño = (int) (Math.random() * 16 + 5); 
+    
+    personaje.setVida(personaje.getVida() + incrementoVida);
+    personaje.setDaño(personaje.getDaño() + incrementoDaño);
+
+    System.out.println("Nivel " + personaje.getNivel() + ": Se han aumentado las estadísticas de los personajes.");
+}
+
      // getters and setters
 
     public JPanel getPnlDefensas() {
@@ -539,7 +634,6 @@ public void atacarPersonaje(Personaje personaje, int fila_enemigo, int columna_e
     public void setDefensa_seleccionada(Defensa defensa_seleccionada) {
         this.defensa_seleccionada = defensa_seleccionada;
     }
-
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarImagen;
